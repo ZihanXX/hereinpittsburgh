@@ -7,7 +7,6 @@ var Item        = require("../models/item"),
 var middlewareObj = {};
 
 //check if logged in, and react to it
-//问题是，每一次loggin之后都会回到items页,怎么才能改成回到当前页呢
 middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){
         return next();

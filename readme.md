@@ -1,10 +1,13 @@
-=======vv3========
-Jul.6  Do the profile page
-=======vv4========
-fix comments/new
-Jul.6  Search function
+=======vv5========
+Jul.6-7  Favorites
+Jul.7 return back to the page just been viewing after login
+Jul.7 tip: category cannot be changed once the item is created
+JUL.8   fix remaining items in category after items being removed
+        fix remaining comments after items being removed
+        fix remaining items in user after items being removed
 
-* db: hip_vv2
+
+* db: hip
 
 * ==========DATABASE========== *
 
@@ -14,7 +17,7 @@ name            name            name            name            name            
 myId            myId            myId            email           Item            User            
 id              id              id              id              id              id              
 date_crt        date_crt        date_crt        password                        date_crt
-User            User            User            address
+User            User            User            address                         Item
 descreption     descreption     descreption     wechat
 image           image           image/*         wechat_img*
 Category        Category        Category        Item

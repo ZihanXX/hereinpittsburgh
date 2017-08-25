@@ -12,10 +12,10 @@ var itemsSchema = new mongoose.Schema({
         username: String
     },
     comments: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Comment"
-      }
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
     ],
     category: {
         id: {

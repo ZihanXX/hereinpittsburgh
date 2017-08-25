@@ -1,17 +1,18 @@
 <% include ../partials/header %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <p><img src="<%= item.image %>"></p>
 
 <p><%= item.name %></p>
 <p><%= item.category.catename %></p>
-<% console.log(user); %>
+
 <p> 
     <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
-        <a href="/myprofile/<%= user._id %>"><%= item.author.username %></a></p>
+        <a href="/myprofile/<%= user._id %>"><%= item.author.username %></a>
     <% } else { %>
-        <a href="/profile/<%= user._id %>"><%= item.author.username %></a></p>
+        <a href="/profile/<%= user._id %>"><%= item.author.username %></a>
     <% } %>
-
+</p>
 
 
 <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
@@ -20,6 +21,25 @@
         <button class="btn btn-xs btn-danger">Delete</button>
     </form>
 <% } %>
+
+<p>
+    <% var flag = false; %>
+    <% if(currentUser) { %>
+    <% console.log(currentUser); %>
+        <% currentUser.favorites.forEach(function(favoriteItem){ %>
+            <% if(favoriteItem.equals(item._id)) { flag = true; } %>
+        <% } ); %>
+    <% } %>
+    <% if(currentUser && flag) { %>
+        <p>FAVORITES
+            <a href="/items/<%= item._id %>/favorite-off"><span class="glyphicon glyphicon-star"></span></a>
+        </p>
+    <% } else { %>
+        <p>FAVORITES
+            <a href="/items/<%= item._id %>/favorite-on"><span class="glyphicon glyphicon-star-empty"></span></a>
+        </p>
+    <% } %>
+</p>
 
 
 <p>

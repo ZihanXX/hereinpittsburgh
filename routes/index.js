@@ -12,6 +12,8 @@ var middleware = require("../middleware");
 
 //root route
 router.get("/", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
     res.render("landing");
 });
 
@@ -43,9 +45,10 @@ router.get("/myprofile/:id", middleware.isLoggedIn, function(req, res){
         }
     });
 });
-
 //OTHER'S PROFILE
 router.get("/profile/:id", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
     User.findById(req.params.id).populate("items").exec(function(err, user){
         if(err) {
             console.log(err);
@@ -55,19 +58,19 @@ router.get("/profile/:id", function(req, res){
     });
 });
 
-//show login form
+//LOGIN
 router.get("/login", function(req, res) {
     res.render("login");
 });
-//handle login logic
-router.post("/login", passport.authenticate("local", 
-    {
-        successRedirect: "/items",
-        failureRedirect: "/login"  
-    }), function(req, res) {
+router.post('/login', 
+    passport.authenticate('local', { failureRedirect: '/login', failureFlash: true}),
+    function(req, res) {
+        console.log(req.session);
+        res.redirect("" + req.session.returnTo);
+        delete req.session.returnTo;
 });
-
-//log out route
+  
+//LOGOUT
 router.get("/logout", function(req, res) {
     req.logout();
     res.redirect("/items");

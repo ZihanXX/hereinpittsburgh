@@ -11,8 +11,10 @@ var middleware = require("../middleware");
 
 //if logged in, run "next()", 也就是后面的function
 //但下面这一段只是隐藏了这个url，如果有人直接access rul，也可以做出更改
-router.get("/new", middleware.isLoggedIn, function(req, res) {
-    console.log(req.params.id); //传的:id
+router.get("/items/:id/comments/new", middleware.isLoggedIn, function(req, res) {
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    //console.log(req.params.id); //传的:id
     Item.findById(req.params.id, function(err, item){
         if(err) {
             console.log(err);
@@ -23,7 +25,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 });
 
 //所以要在下面这一段也加上middleware isLoggedIN
-router.post("/", middleware.isLoggedIn, function(req, res){
+router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
     Item.findById(req.params.id, function(err, item) {
         if(err) {
             console.log(err);
@@ -32,17 +34,16 @@ router.post("/", middleware.isLoggedIn, function(req, res){
             Comment.create(req.body.comment, function(err, comment){
                 if(err) {console.log(err);}
                 else {
-                    //add username and id to comment
                     comment.author.id = req.user._id;
                     comment.author.username = req.user.username;
-                    //save comment
+                    comment.item = item;
                     comment.save();
                     item.comments.push(comment);
                     item.save();
                     res.redirect("/items/" + item._id);
                 }
             });
-            console.log(req.body.comment);
+            //console.log(req.body.comment);
         }
     });
 });

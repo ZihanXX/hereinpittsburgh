@@ -18,6 +18,8 @@ var catdata = [
     {name: "3", items: []}
     ]
 
+//====CLEAR ALL THE DATA EXCEPT FOR CATES====//
+
 function seedDB(){
     //remove all the items
     Item.remove({}, function(err){

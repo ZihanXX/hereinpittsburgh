@@ -3,10 +3,10 @@ var mongoose = require("mongoose");
 var categorySchema = mongoose.Schema({
     name: String,
     items: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Item"
-      }
+       {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Item"
+        }
     ]
 });
 

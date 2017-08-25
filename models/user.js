@@ -5,10 +5,16 @@ var UserSchema = new mongoose.Schema({
     username: String,
     password: String,
     items: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Item"
-      }
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Item"
+        }
+    ],
+    favorites: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Item"
+        }
     ]
 });
 
