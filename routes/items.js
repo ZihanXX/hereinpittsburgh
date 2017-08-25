@@ -366,7 +366,7 @@ router.put("/items/:id", middleware.checkItemOwnerShip, function(req, res) {
         } else {
             updatedItem.date_update = currentTime();
             updatedItem.save();
-            req.flash("success", "the item has been successfully edited");
+            req.flash("success", "The item has been successfully edited");
             res.redirect("/items/" + req.params.id);
         }
     });

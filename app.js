@@ -13,11 +13,12 @@ var express         = require("express"),
 var Item        = require("./models/item"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
-    Category    = require("./models/category")
+    Category    = require("./models/category");
 
 var itemRoutes      = require("./routes/items"),
     commentRoutes   = require("./routes/comments"),
-    indexRoutes     = require("./routes/index");
+    indexRoutes     = require("./routes/index"),
+    exploreRoutes   = require("./routes/explore");
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -51,12 +52,10 @@ app.use(function(req, res, next){
     next();
 });
 
-// app.use("/", indexRoutes);
-// app.use("/items/:id/comments", commentRoutes);
-// app.use("/items", itemRoutes);
 app.use("/", indexRoutes);
 app.use("/", commentRoutes);
 app.use("/", itemRoutes);
+app.use("/", exploreRoutes);
 
 //make sure the server is running
 app.listen(process.env.PORT, process.env.IP, function(){

@@ -10,7 +10,9 @@
     </head>
     
     <body>
+        
     <div class="ui grid">
+        <!--big screen header-->
         <div class="computer tablet only row">
             <div class="ui top fixed secondary pointing menu" style="background-color: white; opacity: 50%;">
                 <div class="ui container">
@@ -40,6 +42,7 @@
             </div> 
         </div>
         
+        <!--mobile header-->
         <div class="mobile only row">
             <div class="ui fixed inverted navbar menu">
                 <div class="item">
@@ -72,9 +75,7 @@
                     <% } %>
                 </div>
             </div>
-            
         </div>
-        
         <script>
             $(document).ready(function(){
               $('.right.menu.open').on("click",function(e){
@@ -86,56 +87,24 @@
         
     </div>
        
-        
-        <div class="ui container" style="padding-top: 70px">
-            
-            <div class="container">
-                <% if(error && error.length > 0) { %>
-                    <div class="ui negative message">
-                      <div class="header">
-                        <%= error %>
-                      </div>
-                      <p>Refresh the page to make it go away.</p>
-                    </div>
-                <% } %>
-                <% if(success && success.length > 0) { %>
-                    <div class="ui positive message">
-                        <div class="header">
-                            <%= success %>
-                        </div>
-                        <p>Refresh the page to make it go away.</p>
-                    </div>
-                <% } %>
+    <!--flash-->
+    <div class="ui container" style="margin-top: 70px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+              <p>Refresh the page to make it go away.</p>
             </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+                <p>Refresh the page to make it go away.</p>
+            </div>
+        <% } %>
+    </div>
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!--<div class="ui simple selection dropdown item" style="border-width: 0; width: 30px;">-->
-                <!--    <span class="text">On Sale</span>-->
-                <!--    <i class="dropdown icon" style="icon-align: center"></i>-->
-                <!--    <div class="menu">-->
-                <!--      <a class="item" href="/items">All On Sale</a>-->
-                <!--      <div class="item">Furniture</div>-->
-                <!--      <div class="item">Appliances</div>-->
-                <!--      <div class="item"></div>-->
-                <!--    </div>-->
-                <!--</div>-->
                 
-                
-        <script>
-            // $('.dropdown').dropdown();
-        </script>

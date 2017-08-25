@@ -35,7 +35,7 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
             item.save();
             Comment.create(req.body.comment, function(err, comment){
                 if(err) {
-                    req.flash("error", "fail to create comment");
+                    req.flash("error", "Fail to create comment.");
                 }
                 else {
                     comment.author.id = req.user._id;
@@ -45,7 +45,7 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
                     comment.save();
                     item.comments.push(comment);
                     item.save();
-                    req.flash("success", "successfully added comment");
+                    req.flash("success", "Successfully added comment.");
                     res.redirect("/items/" + item._id);
                 }
             });

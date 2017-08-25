@@ -17,23 +17,23 @@
     
   <!--user items-->
   <div style="margin-top: 50px">
-      <h3 class="ui horizontal divider header">
-        <i class="user icon" style="margin-bottom: 10px"></i>
-        Your Items
-      </h3>
-      <% include ../items/items %>
+    <h3 class="ui horizontal divider header">
+      <i class="user icon" style="margin-bottom: 10px"></i>
+      Your Items
+    </h3>
+    <% include ../items/items %>
   </div>
   
   <!--favorite items-->
   <div style="margin-top: 50px">
-      <h3 class="ui horizontal divider header">
-        <i class="star icon" style="margin-bottom: 10px"></i>
-        Your Favorites
-      </h3>
-      <% if(favorites.length > 0) { %>
-          <% var items = favorites; %>
-          <% include ../items/items %>
-      <% } %>
+    <h3 class="ui horizontal divider header">
+      <i class="star icon" style="margin-bottom: 10px"></i>
+      Your Favorites
+    </h3>
+    <% if(favorites.length > 0) { %>
+        <% var items = favorites; %>
+        <% include ../items/items %>
+    <% } %>
   </div>
     
 </div>

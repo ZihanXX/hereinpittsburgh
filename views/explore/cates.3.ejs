@@ -1,0 +1,53 @@
+<% include ../partials/header %>
+
+
+<div id="map" style="width: auto; height: 600px;"></div>
+
+
+
+<script>
+<%
+function initMap() {
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 13,
+    center: {lat: 40.45, lng: -79.95},
+  });
+
+  var infowindow = new google.maps.InfoWindow();  
+  var geocoder = new google.maps.Geocoder;
+  var marker, i;
+  
+  for (i = 0; i < locs.length; i++) { 
+    geocoder.geocode( { 'placeId': locs[i].address.place_id}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        createMarker(results[0].geometry.location, locs[0].title+"<br>"+locs[0].address.name);
+      }
+      else alert("some problem in geocode" + status);
+    });
+  }
+  
+  function createMarker(latlng,html){
+    var marker = new google.maps.Marker({
+      position: latlng,
+      map: map
+    }); 
+    google.maps.event.addListener(marker, 'click', function() { 
+      infowindow.setContent(html);
+      infowindow.open(map, marker);
+    });
+  }
+}
+%>
+<% src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&libraries=places&callback=initMap"
+    async defer%>
+</script>
+
+<%
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&libraries=places&callback=initMap"
+    async defer>
+%>
+
+
+
+<% include ../partials/footer %>

@@ -18,7 +18,13 @@ var UserSchema = new mongoose.Schema({
             ref: "Item"
         }
     ],
-    wechat: String
+    wechat: String,
+    locations: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Location"
+        }
+    ]
 });
 
 UserSchema.plugin(passprotLocalMongoose);

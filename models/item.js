@@ -3,7 +3,6 @@ var mongoose = require("mongoose");
 //set up schema
 var itemsSchema = new mongoose.Schema({
     name: String,
-    type: String,
     wechat: String,
     imgs: {
         imgs_id: String,

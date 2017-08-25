@@ -46,7 +46,7 @@ router.post("/register", function(req, res) {
             return res.render("register", {"error": exitMassage});
         } else {
             passport.authenticate("local")(req, res, function(){
-                req.flash("success", "Welcome to HIP, " + user.personal_name);
+                req.flash("success", "Welcome to HereInPittsburgh, " + user.personal_name);
                 if(!req.session.returnTo) {
                     res.redirect("/items");
                 } else {
@@ -101,7 +101,7 @@ router.post('/login',
 //LOGOUT
 router.get("/logout", function(req, res) {
     req.logout();
-    req.flash("success", "loged you out");
+    req.flash("success", "Loged you out");
     if(!req.session.returnTo) {
         res.redirect("/items");
     } else {

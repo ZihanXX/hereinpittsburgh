@@ -1,25 +1,33 @@
 <% include partials/header %>
 
-<!--add new item-->
-<div style="width: 200px; margin: 30px auto">
-  <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
-    <i class="dropdown icon"></i>
-    <span class="text">Add New Item</span>
-    <div class="menu">
-      <a class="item" href="/items/new_sale">On Sale</a>
-      <a class="item" href="/items/new_housing">Housing</a>
-      <a class="item" href="/items/new_events">Events</a>
+<div style="padding-top: 10px"></div>
+
+
+<div class="ui container">
+
+  <!--add new item-->
+  <div style="width: 200px; margin: 30px auto">
+    <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
+      <i class="dropdown icon"></i>
+      <span class="text">Add New Item</span>
+      <div class="menu">
+        <a class="item" href="/items/new_sale">On Sale</a>
+        <a class="item" href="/items/new_housing">Housing</a>
+        <a class="item" href="/items/new_events">Events</a>
+      </div>
     </div>
   </div>
+  
+  <!--items-->
+  <div style="margin-top: 30px">
+    <h3 class="ui horizontal divider header">
+      Items
+    </h3>
+    <% include items/items %>
+  </div>
+
 </div>
 
-<!--items-->
-<div style="margin-top: 30px">
-  <h3 class="ui horizontal divider header">
-    Items
-  </h3>
-  <% include items/items %>
-</div>
 
 <script>
   $(document).ready(function() {

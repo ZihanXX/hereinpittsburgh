@@ -1,13 +1,14 @@
 <% include ../partials/header %>
 
-    <header class="jumbotron">
-        <div class="container">
-            <h1>This is the results for: <%= query %></h1>
-        </div>
-    </header>
-    
+<div style="padding-top: 10px"></div>
 
-<% include items %>
+<!--items-->
+<div style="margin-top: 30px">
+    <h3 class="ui horizontal divider header">
+      This is the results for: <%= query %>
+    </h3>
+    <% include ../items/items %>
+</div>
 
 
 <% include ../partials/footer %>
