@@ -5,6 +5,7 @@ var express         = require("express"),
     mongoose        = require("mongoose"),
     passport        = require("passport"),
     localStrategy   = require("passport-local"),
+    methodOverride  = require("method-override"),
     seedDB          = require("./seeds");
 
 var Item        = require("./models/item"),
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect("mongodb://localhost/hip_v3", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
 //seedDB();
 
 //PASSPORT CONFIGURATION

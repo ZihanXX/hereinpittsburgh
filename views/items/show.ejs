@@ -5,8 +5,16 @@
 <p><%= item.name %></p>
 <p><%= item.author.username %></p>
 
+<% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+    <a class="btn btn-xs btn-warning" href="/items/<%= item._id %>/edit">Edit</a>
+    <form id="delete-form" action="/items/<%= item._id %>?_method=DELETE" method="POST">
+        <button class="btn btn-xs btn-danger">Delete</button>
+    </form>
+<% } %>
+
+
 <p>
-    <a href="/items/<%= item._id %>/comments/new">Add New Comment</a>
+    <a class="btn btn-warning" href="/items/<%= item._id %>/comments/new">Add New Comment</a>
 </p>
 
 <% item.comments.forEach(function(comment){ %>

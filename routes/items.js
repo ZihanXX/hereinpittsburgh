@@ -4,6 +4,8 @@ var express  = require("express"),
 var Item = require("../models/item"),
     Comment = require("../models/comment"),
     User = require("../models/user");
+    
+var middleware = require("../middleware");
 
 
 //items page
@@ -18,7 +20,7 @@ router.get("/", function(req, res){
 });
 
 //post new items
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var author = {
@@ -37,7 +39,7 @@ router.post("/", isLoggedIn, function(req, res){
 });
 
 //show the form that will send the data to /items
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("items/new");
 });
 
@@ -53,16 +55,35 @@ router.get("/:id", function(req, res) {
     });
 });
 
-//middleware
-//copied form index.js
-//check if logged in, and react to it
-//问题是，每一次loggin之后都会回到items页,怎么才能改成回到当前页呢
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+//EDIT ITEM ROUTE
+router.get("/:id/edit", middleware.checkItemOwnerShip, function(req, res){
+    Item.findById(req.params.id, function(err, foundItem){
+        if(err){}
+        res.render("items/edit", {item: foundItem});
+    });
+});
 
+//UPDATE ITEM ROUTE
+router.put("/:id", middleware.checkItemOwnerShip, function(req, res) {
+    //find and update the correct item
+    Item.findByIdAndUpdate(req.params.id, req.body.item, function(err, updatedItem){
+        if(err) {
+            res.redirect("/items");
+        } else {
+            res.redirect("/items/" + req.params.id);
+        }
+    });
+});
+
+//DESTROY ITEM ROUTE
+router.delete("/:id", middleware.checkItemOwnerShip, function(req, res){
+   Item.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+          res.redirect("/items");
+      } else {
+          res.redirect("/items");
+      }
+   });
+});
 
 module.exports = router;

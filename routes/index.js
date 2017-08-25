@@ -49,15 +49,4 @@ router.get("/logout", function(req, res) {
     res.redirect("/items");
 });
 
-//middleware
-//check if logged in, and react to it
-//问题是，每一次loggin之后都会回到items页,怎么才能改成回到当前页呢
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
-
-
 module.exports = router;
