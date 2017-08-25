@@ -4,7 +4,6 @@ var mongoose = require("mongoose");
 var itemsSchema = new mongoose.Schema({
     name: String,
     image: String,
-    file: String,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +16,14 @@ var itemsSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          ref: "Comment"
       }
-   ]
+    ],
+    category: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category"
+        },
+        catename: String
+    }
 });
 
 //when we require item.js, we'll be getting the model

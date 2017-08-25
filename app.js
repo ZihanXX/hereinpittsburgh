@@ -10,14 +10,15 @@ var express         = require("express"),
 
 var Item        = require("./models/item"),
     Comment     = require("./models/comment"),
-    User        = require("./models/user");
+    User        = require("./models/user"),
+    Category    = require("./models/category")
 
 var itemRoutes      = require("./routes/items"),
     commentRoutes   = require("./routes/comments"),
     indexRoutes     = require("./routes/index");
 
 app.use(bodyParser.urlencoded({extended: true}));
-mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
+mongoose.connect("mongodb://localhost/hip_vv2", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
@@ -45,8 +46,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/items/:id/comments", commentRoutes);
 app.use("/items", itemRoutes);
-
-
 
 //make sure the server is running
 app.listen(process.env.PORT, process.env.IP, function(){

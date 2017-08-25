@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
-var Item = require("./models/item");
-var Comment = require("./models/comment");
+var Item        = require("./models/item"),
+    Comment     = require("./models/comment"),
+    User        = require("./models/user"),
+    Category    = require("./models/category")
 
 var data = [
          {name: "CHANEL", image: "http://wx1.sinaimg.cn/mw690/6d48f423gy1fh517d2su3j20m80euabu.jpg"},
@@ -10,7 +12,11 @@ var data = [
          {name: "DIOR2", image: "http://wx2.sinaimg.cn/mw690/6d48f423gy1fh517ed4vlj20m80eu3zq.jpg"}
     ]
     
-
+var catdata = [
+    {name: "1", items: []},
+    {name: "2", items: []},
+    {name: "3", items: []}
+    ]
 
 function seedDB(){
     //remove all the items
@@ -18,29 +24,36 @@ function seedDB(){
         if(err) {
             console.log(err);
         }
-        console.log("removed items!");
-        //then add a few items
-        data.forEach(function(seed){
-            Item.create(seed, function(err, item){
-                if(err) {
-                    console.log(err);
-                } else {
-                    console.log("added a item.");
-                    //add a few comments
-                    Comment.create({
-                        text: "This item is great.",
-                        author: "Xinxin"
-                    }, function(err, comment){
-                        if(err) {
-                            console.log(err);
-                        } else {
-                            item.comments.push(comment);
-                            item.save();
-                            console.log("create new comment");
-                        }
-                    });
-                }
-            });
+        // console.log("removed items!");
+        // //then add a few items
+        // data.forEach(function(seed){
+        //     Item.create(seed, function(err, item){
+        //         if(err) {
+        //             console.log(err);
+        //         } else {
+        //             console.log("added a item.");
+        //             //add a few comments
+        //             Comment.create({
+        //                 text: "This item is great.",
+        //                 author: "Xinxin"
+        //             }, function(err, comment){
+        //                 if(err) {
+        //                     console.log(err);
+        //                 } else {
+        //                     item.comments.push(comment);
+        //                     item.save();
+        //                     console.log("create new comment");
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
+    });
+    Comment.remove({}, function(){});
+    User.remove({}, function(){});
+    Category.remove({}, function() {
+        catdata.forEach(function(seed){
+            Category.create(seed, function(){});
         });
     });
       

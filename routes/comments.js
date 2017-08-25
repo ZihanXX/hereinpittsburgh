@@ -1,9 +1,10 @@
 var express  = require("express"),
     router   = express.Router({mergeParams: true}); //为了传:id
 
-var Item = require("../models/item"),
-    Comment = require("../models/comment"),
-    User = require("../models/user");
+var Item        = require("../models/item"),
+    Comment     = require("../models/comment"),
+    User        = require("../models/user"),
+    Category    = require("../models/category");
     
 var middleware = require("../middleware");
 

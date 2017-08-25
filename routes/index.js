@@ -1,9 +1,10 @@
 var express  = require("express"),
     router   = express.Router();
 
-var Item = require("../models/item"),
-    Comment = require("../models/comment"),
-    User = require("../models/user");
+var Item        = require("../models/item"),
+    Comment     = require("../models/comment"),
+    User        = require("../models/user"),
+    Category    = require("../models/category");
 
 var passport = require("passport");
 
@@ -48,6 +49,5 @@ router.get("/logout", function(req, res) {
     req.logout();
     res.redirect("/items");
 });
-
 
 module.exports = router;

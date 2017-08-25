@@ -1,9 +1,10 @@
 var express  = require("express"),
     router   = express.Router();
 
-var Item = require("../models/item"),
-    Comment = require("../models/comment"),
-    User = require("../models/user");
+var Item        = require("../models/item"),
+    Comment     = require("../models/comment"),
+    User        = require("../models/user"),
+    Category    = require("../models/category");
     
 var middleware = require("../middleware");
 
@@ -19,21 +20,68 @@ router.get("/", function(req, res){
     })
 });
 
+//CATEGORY
+//category1 page
+router.get("/category=1", function(req, res){
+    Category.findOne({name: "1"}).populate("items").exec(function(err, cate){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("items/index", {items: cate.items});
+        }
+    });
+});
+//category2 page
+router.get("/category=2", function(req, res){
+    Category.findOne({name: "2"}).populate("items").exec(function(err, cate){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("items/index", {items: cate.items});
+        }
+    });
+});
+//category3 page
+router.get("/category=3", function(req, res){
+    Category.findOne({name: "3"}).populate("items").exec(function(err, cate){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("items/index", {items: cate.items});
+        }
+    });
+});
+
+
 //post new items
 router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
-    var author = {
-        id: req.user._id,
-        username: req.user.username
-    }
-    var newItem = {name: name, image: image, author: author};
-    //creare a new item and save to dbs
-    Item.create(newItem, function(err, newItem){
-        if(err) {
-            console.log(err);
-        } else {
-            res.redirect("/items");
+    //cate是db里一个Category，而category只是item里的一个field
+    Category.findOne({name: req.body.category}, function(err, cate){
+        if(err){console.log(err)}
+        else {
+            //console.log(cate);
+            var category = {
+                id: cate._id,
+                catename: req.body.category
+            }
+            var author = {
+                id: req.user._id,
+                username: req.user.username
+            }
+            var newItem = {name: name, category: category, image: image, author: author};
+            //creare a new item and save to dbs
+            Item.create(newItem, function(err, newItem){
+                if(err) {
+                    console.log(err);
+                } else {
+                    cate.items.push(newItem);
+                    cate.save();
+                    console.log(cate);
+                    res.redirect("/items");
+                }
+            });
         }
     });
 });
@@ -85,5 +133,6 @@ router.delete("/:id", middleware.checkItemOwnerShip, function(req, res){
       }
    });
 });
+
 
 module.exports = router;

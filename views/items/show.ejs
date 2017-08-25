@@ -3,9 +3,9 @@
 <p><img src="<%= item.image %>"></p>
 
 <p><%= item.name %></p>
+<p><%= item.category.catename %></p>
 <p><%= item.author.username %></p>
 
-<p><%= item.file %></p>
 
 <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
     <a class="btn btn-xs btn-warning" href="/items/<%= item._id %>/edit">Edit</a>
