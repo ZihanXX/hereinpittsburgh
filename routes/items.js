@@ -79,7 +79,6 @@ router.get("/items/category=3", function(req, res){
 
 
 //post new items
-//router.post("/items", middleware.isLoggedIn, function(req, res){
 router.post("/items", upload.array('uploadedImages', 20), function(req, res, next){
     var name = req.body.name;
     var image = req.body.image;
@@ -87,7 +86,6 @@ router.post("/items", upload.array('uploadedImages', 20), function(req, res, nex
     Category.findOne({name: req.body.category}, function(err, cate){
         if(err){console.log(err)}
         else {
-            //console.log(cate);
             var category = {
                 id: cate._id,
                 catename: req.body.category
@@ -97,7 +95,8 @@ router.post("/items", upload.array('uploadedImages', 20), function(req, res, nex
                 username: req.user.username
             }
             var newItem = {name: name, category: category, image: image, author: author, 
-                            date_crt: currentTime(), date_update: currentTime()};
+                            date_crt: currentTime(), date_update: currentTime(), 
+                            address: {name: req.body.address, place_id: req.body.place_id}};
             //creare a new item and save to dbs
             Item.create(newItem, function(err, newItem){
                 if(err) {

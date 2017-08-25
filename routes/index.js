@@ -27,7 +27,7 @@ router.post("/register", function(req, res) {
     User.register(newUser, req.body.password, function(err, user){
         if(err) {
             console.log(err); //like the username has been registered
-            return res.render("register");
+            return res.render("register", {exist: true});
         } 
         passport.authenticate("local")(req, res, function(){
             res.redirect("/items");
@@ -63,7 +63,7 @@ router.get("/login", function(req, res) {
     res.render("login");
 });
 router.post('/login', 
-    passport.authenticate('local', { failureRedirect: '/login', failureFlash: true}),
+    passport.authenticate('local', { failureRedirect: '/login'}),
     function(req, res) {
         console.log(req.session);
         res.redirect("" + req.session.returnTo);

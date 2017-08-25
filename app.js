@@ -53,36 +53,7 @@ app.use("/", commentRoutes);
 app.use("/", itemRoutes);
 
 
-// //======date======//
-// var currentTime = function() {
-//     var utcNow = new Date();
-//     var now = new Date(Date.UTC(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate(), 
-//                             utcNow.getHours()-4, utcNow.getMinutes(), utcNow.getSeconds()));
-//     return now;
-// }
-// var currentTimeNum = function() {
-//     var utcNow = new Date();
-//     var now = new Date(Date.UTC(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate(), 
-//                             utcNow.getHours()-4, utcNow.getMinutes(), utcNow.getSeconds()));
-//     var year    = now.getFullYear(),
-//         month   = now.getMonth() + 1,
-//         date    = now.getDate(),
-//         hours   = now.getHours(),
-//         minutes = now.getMinutes(),
-//         seconds = now.getSeconds();
-//     var timeStamp = year*10000000000 + month*100000000 + date*1000000 + hours*10000 + minutes*100 + seconds;
-//     return timeStamp;
-// }
-// //console.log(Date());
-// console.log(currentTime());
-// console.log(currentTimeNum());
-
-// var nowUTC = new Date();
-// var now = currentTime();
-// console.log(now > nowUTC);//false
-// console.log(now < nowUTC);//true: now早,nowUTC晚
-
-//===map===//
+//===try map===//
 app.get("/map", function(req, res){
     res.render("map");
 });

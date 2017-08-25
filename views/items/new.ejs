@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Create a New Item</h1>
-        <div style="width: 30%; margin: 30px auto;">
+        <div style="width: 50%; margin: 30px auto;">
             <form action="/items" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" name="name" placeholder="name">
@@ -14,12 +14,13 @@
                 <div class="form-group">
                     <input class="form-control" type="text" name="image" placeholder="image url">
                 </div>
-                <div class="form-group">
-                    <form action="/uploads" method="post" enctype="multipart/form-data">
-                        <input type="file" name="uploadedImages" value="UPLOAD" multiple>
-                        <input type="submit" value="UPLOAD">
-                    </form>
+                
+                <div>
+                    <input id="place-id" type="text" name="place_id" placeholder="place_id">
+                    <input id="pac-input" type="text" name="address" placeholder="Enter a location">
+                    <div id="map"></div>
                 </div>
+                
                 <div class="form-group">
                     <button class="btn btn-lg btn-default btn-block">Submit!</button>
                 </div>
@@ -31,6 +32,69 @@
 </div>
 
 
+<style>
+  #map {
+    height: 400px;
+    width: 600px;
+  }
+  #pac-input {
+    background-color: #fff;
+    /*font-family: Roboto;*/
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 400px;
+  }
+  #pac-input:focus {
+    border-color: #4d90fe;
+  }
+  #place-id {
+    width: 0;
+    visibility: hidden;
+  }
+</style>
+
+
+<script>
+  function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.445, lng: -79.95},
+      zoom: 13
+    });
+    var input = document.getElementById('pac-input');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var marker = new google.maps.Circle({
+      strokeWeight: 0,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: map,
+      radius: 150
+    });
+    autocomplete.addListener('place_changed', function() {
+      marker.setVisible(false);
+      var place = autocomplete.getPlace();
+      console.log(place);
+      if (!place.geometry) {
+        window.alert("No details available for input: '" + place.name + "'");
+        return;
+      }
+      // If the place has a geometry, then present it on a map.
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.serZoom(17);  // Why 17? Because it looks good.
+      }
+      marker.setCenter(place.geometry.location);
+      marker.setVisible(true);
+      document.getElementById("place-id").value = place.place_id;
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&libraries=places&callback=initMap"
+    async defer></script>
 
 
 

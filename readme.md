@@ -1,24 +1,32 @@
-=======vv6========
-Jul.8 upload local image, finally!!!(test in vv1)
-Jul.9 refine the uploading, and db accordingly. The uploading wasn't done actually
-Jul.10 Try another solution, worked!(test in vv1)
-Jul.11-12 Refine the uploading(try.js, addImages, addImages1)
-Jul.14 sort with date_update
-Jul.14 try google map api
-Jul.15 solve the problem of uploading 
+=======vv7========
+Jul.15 add google map 
+Jul.15 duplicated username registering
 
 TODO: 
-* Facebook, Wechat, Google LOGIN
-* Google Map
-* local image
+* fix when the password is wrong, alert
+* local image uploading combine with new item
+* when edit item, change the date_update
+* complete the database, all
+* refine google map for housing(make it maker instead of circle)
+* username is email, set another username to save a name
+* wechat Login!! you need it
+* upload image size, number
 * two languages
-* about pittsburgh
+* create wechat message and copy it with one click
+* one-item post / multi-item post(mainly text): images up to 4 / 4
+* other items by this same user
+* about pittsburgh (users can add new spots)
 * zhushi all the codes
-* register email, edu ortherized
-        
+* contact us (jubao)  there is no us
+* Facebook, Wechat, Google LOGIN*
+* register email, edu ortherized*
+* other register errs like invalid username*
+* create pdf or long imaage for items*
+* 微信公众号，推送
+* 宣传视频，文案
 
-* db: hip
 
+db: hip
 * ==========DATABASE========== *
 
 Item_ads        Item_sale       Item_housing    User            Category        Comment         Imgs 

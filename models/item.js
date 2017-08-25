@@ -25,7 +25,11 @@ var itemsSchema = new mongoose.Schema({
         catename: String
     },
     date_crt: Date,
-    date_update: Date
+    date_update: Date,
+    address: {
+        name: String,
+        place_id: String
+    } 
 });
 
 //when we require item.js, we'll be getting the model
