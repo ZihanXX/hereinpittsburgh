@@ -1,20 +1,24 @@
 =======vv3========
 Jul.6  Do the profile page
+=======vv4========
+fix comments/new
+Jul.6  Search function
+
+* db: hip_vv2
 
 * ==========DATABASE========== *
 
-Item_ads        Item_sale       Item_housing    User            Category        Comment         Tag*
-===============|===============|===============|===============|===============|===============|==============
-name            name            name            name            name            text            name
-myId            myId            myId            email           Item            User            Item
-id              id              id              id              id              id              id
+Item_ads        Item_sale       Item_housing    User            Category        Comment         
+===============|===============|===============|===============|===============|===============
+name            name            name            name            name            text            
+myId            myId            myId            email           Item            User            
+id              id              id              id              id              id              
 date_crt        date_crt        date_crt        password                        date_crt
 User            User            User            address
 descreption     descreption     descreption     wechat
 image           image           image/*         wechat_img*
 Category        Category        Category        Item
-                Tag*                            favorites
-address*        address         address/*
+address*        address         address/*       favorites
 date_av*        date_av         date_av
                 date_note       date_note
 isEnd           isEnd           isEnd

@@ -20,6 +20,18 @@ router.get("/", function(req, res){
     });
 });
 
+//search
+router.get("/search", function(req, res) {
+    var query = req.query.q;
+    Item.find({"name":{$regex : ".*" + query +".*", $options: '-i'}}, function(err, items){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("items/index", {items: items});
+        }
+    });
+});
+
 //CATEGORY
 //category1 page
 router.get("/category=1", function(req, res){
