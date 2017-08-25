@@ -1,5 +1,7 @@
 var Item        = require("../models/item"),
-    Comment     = require("../models/comment");
+    Comment     = require("../models/comment"),
+    User        = require("../models/user"),
+    Category    = require("../models/category");
     
 // all the middleare goes here
 var middlewareObj = {};

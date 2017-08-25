@@ -4,7 +4,14 @@
 
 <p><%= item.name %></p>
 <p><%= item.category.catename %></p>
-<p><%= item.author.username %></p>
+<% console.log(user); %>
+<p> 
+    <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+        <a href="/myprofile/<%= user._id %>"><%= item.author.username %></a></p>
+    <% } else { %>
+        <a href="/profile/<%= user._id %>"><%= item.author.username %></a></p>
+    <% } %>
+
 
 
 <% if(currentUser && item.author.id.equals(currentUser._id)){ %>

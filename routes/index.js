@@ -7,6 +7,7 @@ var Item        = require("../models/item"),
     Category    = require("../models/category");
 
 var passport = require("passport");
+var middleware = require("../middleware");
 
 
 //root route
@@ -32,6 +33,28 @@ router.post("/register", function(req, res) {
     });
 });
 
+//MYPROFILE
+router.get("/myprofile/:id", middleware.isLoggedIn, function(req, res){
+    User.findById(req.user._id).populate("items").exec(function(err, user){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("user/myprofile", {items: user.items});
+        }
+    });
+});
+
+//OTHER'S PROFILE
+router.get("/profile/:id", function(req, res){
+    User.findById(req.params.id).populate("items").exec(function(err, user){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("user/profile", {user: user, items: user.items});
+        }
+    });
+});
+
 //show login form
 router.get("/login", function(req, res) {
     res.render("login");
@@ -49,5 +72,6 @@ router.get("/logout", function(req, res) {
     req.logout();
     res.redirect("/items");
 });
+
 
 module.exports = router;

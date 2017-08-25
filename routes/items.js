@@ -17,7 +17,7 @@ router.get("/", function(req, res){
         } else {
             res.render("items/index", {items: items});
         }
-    })
+    });
 });
 
 //CATEGORY
@@ -79,6 +79,9 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                     cate.items.push(newItem);
                     cate.save();
                     console.log(cate);
+                    req.user.items.push(newItem);
+                    req.user.save(); 
+                    console.log(req.user);
                     res.redirect("/items");
                 }
             });
@@ -98,7 +101,11 @@ router.get("/:id", function(req, res) {
             console.log(err);
         } else {
             console.log(foundItem);
-            res.render("items/show", {item: foundItem});
+            User.findById(foundItem.author.id, function(err, user) {
+                if(err) {console.log(err);}
+                res.render("items/show", {item: foundItem, user: user});
+            });
+            //res.render("items/show", {item: foundItem});
         }
     });
 });
