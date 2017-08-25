@@ -79,7 +79,7 @@ router.get("/items/category=3", function(req, res){
 
 
 //post new items
-router.post("/items", upload.array('uploadedImages', 20), function(req, res, next){
+router.post("/items", middleware.isLoggedIn, function(req, res, next){
     var name = req.body.name;
     var image = req.body.image;
     //cate是db里一个Category，而category只是item里的一个field
@@ -173,7 +173,7 @@ router.get("/items/:id/favorite-off", middleware.isLoggedIn, function(req, res) 
 //EDIT ITEM ROUTE
 router.get("/items/:id/edit", middleware.checkItemOwnerShip, function(req, res){
     Item.findById(req.params.id, function(err, foundItem){
-        if(err){}
+        if(err) {}
         res.render("items/edit", {item: foundItem});
     });
 });
@@ -185,6 +185,9 @@ router.put("/items/:id", middleware.checkItemOwnerShip, function(req, res) {
         if(err) {
             res.redirect("/items");
         } else {
+            updatedItem.date_update = currentTime();
+            updatedItem.save();
+            req.flash("success", "the item has been successfully edited");
             res.redirect("/items/" + req.params.id);
         }
     });

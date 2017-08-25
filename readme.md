@@ -1,16 +1,18 @@
-=======vv7========
-Jul.15 add google map 
-Jul.15 duplicated username registering
+=======vv8========
+Jul.16 connect-flash
+Jul.16 when the password or username is wrong, alert
+        when edit item, change the date_update
+        the limits of password and username
+        username is email, set another username to save a name
+        no duplicate email or personal_name
 
 TODO: 
-* fix when the password is wrong, alert
 * local image uploading combine with new item
-* when edit item, change the date_update
 * complete the database, all
 * refine google map for housing(make it maker instead of circle)
-* username is email, set another username to save a name
 * wechat Login!! you need it
 * upload image size, number
+* "are you sure you want to ...?"
 * two languages
 * create wechat message and copy it with one click
 * one-item post / multi-item post(mainly text): images up to 4 / 4
@@ -32,10 +34,10 @@ db: hip
 Item_ads        Item_sale       Item_housing    User            Category        Comment         Imgs 
 ===============|===============|===============|===============|===============|===============|===============
 name            name            name            name            name            text            size
-myId            myId            myId            email           Item            User            urls
+myId            myId            myId            email(username) Item            User            urls
 id              id              id              id              id              id              
 date_crt        date_crt        date_crt        password                        date_update
-User            User            User            address                         Item
+User            User            User            address*                        Item
 descreption     descreption     descreption     wechat
 image           image           image/*         wechat_img*
 Category        Category        Category        Item
@@ -52,7 +54,7 @@ wechat_img*     wechat_img*     wechat_img*
 report*         report*         report*
                 delivery
 date_update     date_update     date_update
-
+ 
 
 
 

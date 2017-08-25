@@ -34,7 +34,9 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
             item.date_update = currentTime();
             item.save();
             Comment.create(req.body.comment, function(err, comment){
-                if(err) {console.log(err);}
+                if(err) {
+                    req.flash("error", "fail to create comment");
+                }
                 else {
                     comment.author.id = req.user._id;
                     comment.author.username = req.user.username;
@@ -43,10 +45,10 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
                     comment.save();
                     item.comments.push(comment);
                     item.save();
+                    req.flash("success", "successfully added comment");
                     res.redirect("/items/" + item._id);
                 }
             });
-            //console.log(req.body.comment);
         }
     });
 });

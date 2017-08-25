@@ -17,21 +17,37 @@ router.get("/", function(req, res){
     res.render("landing");
 });
 
-//show register form
+//REGISTER SIGNUP
 router.get("/register", function(req, res) {
     res.render("register");
 });
-//handle sign up logic
+//SIGN UP
 router.post("/register", function(req, res) {
-    var newUser = new User({username: req.body.username}); 
+    var exitMassage = "";
+    User.findOne({personal_name: req.body.personal_name}, function(err, existingUser){
+        if (!err && existingUser){ exitMassage = "please choose another name";}
+    });
+    var newUser = new User({username: req.body.username, personal_name: req.body.personal_name}); 
     User.register(newUser, req.body.password, function(err, user){
         if(err) {
-            console.log(err); //like the username has been registered
-            return res.render("register", {exist: true});
-        } 
-        passport.authenticate("local")(req, res, function(){
-            res.redirect("/items");
-        });
+            var errMassage = err.message;
+            var re = /username/gi;
+            errMassage = errMassage.replace(re, 'email');
+            return res.render("register", {"error": errMassage});
+        } else if(exitMassage == "please choose another name") {
+            user.remove();
+            return res.render("register", {"error": exitMassage});
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                req.flash("success", "Welcome to HIP, " + user.personal_name);
+                if(!req.session.returnTo) {
+                    res.redirect("/items");
+                } else {
+                    res.redirect("" + req.session.returnTo);
+                    delete req.session.returnTo;
+                }
+            });
+        }
     });
 });
 
@@ -61,19 +77,30 @@ router.get("/profile/:id", function(req, res){
 //LOGIN
 router.get("/login", function(req, res) {
     res.render("login");
+    // var message = req.flash("error");
+    // res.render("login", {message: message});
 });
 router.post('/login', 
-    passport.authenticate('local', { failureRedirect: '/login'}),
+    passport.authenticate('local', { failureRedirect: '/login', failureFlash: true}),
     function(req, res) {
-        console.log(req.session);
-        res.redirect("" + req.session.returnTo);
-        delete req.session.returnTo;
+        if(!req.session.returnTo) {
+            res.redirect("/items");
+        } else {
+            res.redirect("" + req.session.returnTo);
+            delete req.session.returnTo;
+        }
 });
   
 //LOGOUT
 router.get("/logout", function(req, res) {
     req.logout();
-    res.redirect("/items");
+    req.flash("success", "loged you out");
+    if(!req.session.returnTo) {
+        res.redirect("/items");
+    } else {
+        res.redirect("" + req.session.returnTo);
+        delete req.session.returnTo;
+    }
 });
 
 

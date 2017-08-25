@@ -3,6 +3,7 @@ var express         = require("express"),
     app             = express(),
     bodyParser      = require("body-parser"),
     mongoose        = require("mongoose"),
+    flash           = require("connect-flash"),
     passport        = require("passport"),
     localStrategy   = require("passport-local"),
     methodOverride  = require("method-override"),
@@ -24,6 +25,7 @@ mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
+app.use(flash());
 // seedDB();
 
 //PASSPORT CONFIGURATION
@@ -38,10 +40,14 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//让curentUser的状态在每个loacals页面都能被传递
+//让curentUser的状态和flash在每个loacals页面都能被传递
 //call this funciton on every single route
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    var error = req.flash("error");
+    var success = req.flash("success");
+    res.locals.error = error;
+    res.locals.success = success;
     next();
 });
 
@@ -51,16 +57,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/", commentRoutes);
 app.use("/", itemRoutes);
-
-
-//===try map===//
-app.get("/map", function(req, res){
-    res.render("map");
-});
-app.get("/mapsearch", function(req, res){
-    res.render("mapsearch");
-});
-
 
 //make sure the server is running
 app.listen(process.env.PORT, process.env.IP, function(){
