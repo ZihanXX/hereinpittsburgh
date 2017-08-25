@@ -12,7 +12,8 @@ var commentSchema = mongoose.Schema({
     item: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"
-    }
+    },
+    date_update: Date
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

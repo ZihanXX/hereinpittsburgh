@@ -15,6 +15,12 @@
                     <input class="form-control" type="text" name="image" placeholder="image url">
                 </div>
                 <div class="form-group">
+                    <form action="/uploads" method="post" enctype="multipart/form-data">
+                        <input type="file" name="uploadedImages" value="UPLOAD" multiple>
+                        <input type="submit" value="UPLOAD">
+                    </form>
+                </div>
+                <div class="form-group">
                     <button class="btn btn-lg btn-default btn-block">Submit!</button>
                 </div>
                 <a href="/items">Go Back</a>

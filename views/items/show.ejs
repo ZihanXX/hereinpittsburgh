@@ -25,7 +25,6 @@
 <p>
     <% var flag = false; %>
     <% if(currentUser) { %>
-    <% console.log(currentUser); %>
         <% currentUser.favorites.forEach(function(favoriteItem){ %>
             <% if(favoriteItem.equals(item._id)) { flag = true; } %>
         <% } ); %>

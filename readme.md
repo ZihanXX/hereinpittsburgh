@@ -1,22 +1,32 @@
-=======vv5========
-Jul.6-7  Favorites
-Jul.7 return back to the page just been viewing after login
-Jul.7 tip: category cannot be changed once the item is created
-JUL.8   fix remaining items in category after items being removed
-        fix remaining comments after items being removed
-        fix remaining items in user after items being removed
+=======vv6========
+Jul.8 upload local image, finally!!!(test in vv1)
+Jul.9 refine the uploading, and db accordingly. The uploading wasn't done actually
+Jul.10 Try another solution, worked!(test in vv1)
+Jul.11-12 Refine the uploading(try.js, addImages, addImages1)
+Jul.14 sort with date_update
+Jul.14 try google map api
+Jul.15 solve the problem of uploading 
 
+TODO: 
+* Facebook, Wechat, Google LOGIN
+* Google Map
+* local image
+* two languages
+* about pittsburgh
+* zhushi all the codes
+* register email, edu ortherized
+        
 
 * db: hip
 
 * ==========DATABASE========== *
 
-Item_ads        Item_sale       Item_housing    User            Category        Comment         
-===============|===============|===============|===============|===============|===============
-name            name            name            name            name            text            
-myId            myId            myId            email           Item            User            
+Item_ads        Item_sale       Item_housing    User            Category        Comment         Imgs 
+===============|===============|===============|===============|===============|===============|===============
+name            name            name            name            name            text            size
+myId            myId            myId            email           Item            User            urls
 id              id              id              id              id              id              
-date_crt        date_crt        date_crt        password                        date_crt
+date_crt        date_crt        date_crt        password                        date_update
 User            User            User            address                         Item
 descreption     descreption     descreption     wechat
 image           image           image/*         wechat_img*
@@ -33,6 +43,7 @@ wechat_img*     wechat_img*     wechat_img*
                 ask/            ask/       
 report*         report*         report*
                 delivery
+date_update     date_update     date_update
 
 
 

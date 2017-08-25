@@ -31,12 +31,15 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
             console.log(err);
             res.redirect("/items");
         } else {
+            item.date_update = currentTime();
+            item.save();
             Comment.create(req.body.comment, function(err, comment){
                 if(err) {console.log(err);}
                 else {
                     comment.author.id = req.user._id;
                     comment.author.username = req.user.username;
                     comment.item = item;
+                    comment.date_update = currentTime();
                     comment.save();
                     item.comments.push(comment);
                     item.save();
@@ -47,5 +50,13 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
         }
     });
 });
+
+//get the date function
+var currentTime = function() {
+    var utcNow = new Date();
+    var now = new Date(Date.UTC(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate(), 
+                            utcNow.getHours()-4, utcNow.getMinutes(), utcNow.getSeconds()));
+    return now;
+}
 
 module.exports = router;

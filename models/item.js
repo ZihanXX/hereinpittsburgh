@@ -23,7 +23,9 @@ var itemsSchema = new mongoose.Schema({
             ref: "Category"
         },
         catename: String
-    }
+    },
+    date_crt: Date,
+    date_update: Date
 });
 
 //when we require item.js, we'll be getting the model

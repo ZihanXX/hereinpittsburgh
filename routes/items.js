@@ -6,6 +6,9 @@ var Item        = require("../models/item"),
     User        = require("../models/user"),
     Category    = require("../models/category");
     
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+    
 var middleware = require("../middleware");
 
 
@@ -13,7 +16,7 @@ var middleware = require("../middleware");
 router.get("/items", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
     //console.log(req.session);
-    Item.find({}, function(err, items){
+    Item.find({}).sort({date_update: -1}).exec(function(err, items) {
         if(err) {
             console.log(err);
         } else {
@@ -76,7 +79,8 @@ router.get("/items/category=3", function(req, res){
 
 
 //post new items
-router.post("/items", middleware.isLoggedIn, function(req, res){
+//router.post("/items", middleware.isLoggedIn, function(req, res){
+router.post("/items", upload.array('uploadedImages', 20), function(req, res, next){
     var name = req.body.name;
     var image = req.body.image;
     //cate是db里一个Category，而category只是item里的一个field
@@ -92,7 +96,8 @@ router.post("/items", middleware.isLoggedIn, function(req, res){
                 id: req.user._id,
                 username: req.user.username
             }
-            var newItem = {name: name, category: category, image: image, author: author};
+            var newItem = {name: name, category: category, image: image, author: author, 
+                            date_crt: currentTime(), date_update: currentTime()};
             //creare a new item and save to dbs
             Item.create(newItem, function(err, newItem){
                 if(err) {
@@ -225,5 +230,12 @@ router.delete("/items/:id", middleware.checkItemOwnerShip, function(req, res){
    });
 });
 
+//get the date function
+var currentTime = function() {
+    var utcNow = new Date();
+    var now = new Date(Date.UTC(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate(), 
+                            utcNow.getHours()-4, utcNow.getMinutes(), utcNow.getSeconds()));
+    return now;
+}
 
 module.exports = router;
