@@ -6,7 +6,7 @@
     <div class="row">
         <h1 style="text-align: center;">Add New Comment To <%= item.name %></h1>
         <div style="width: 30%; margin: 30px auto;">
-            <form action="/index/<%= item.id %>/comments" method="POST">
+            <form action="/items/<%= item.id %>/comments" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" name="comment[text]" placeholder="comment">
                 </div>
@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <button class="btn btn-lg btn-default btn-block">Submit!</button>
                 </div>
-                <a href="//index/<%= item.id %>/comments">Go Back</a>
+                <a href="//items/<%= item.id %>/comments">Go Back</a>
             </form>
         </div>
         

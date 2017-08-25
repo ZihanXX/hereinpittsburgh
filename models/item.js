@@ -11,5 +11,6 @@ var itemsSchema = new mongoose.Schema({
       }
    ]
 });
+
 //when we require item.js, we'll be getting the model
 module.exports = mongoose.model("Item", itemsSchema);
