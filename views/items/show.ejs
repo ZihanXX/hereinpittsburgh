@@ -5,6 +5,8 @@
 <p><%= item.name %></p>
 <p><%= item.author.username %></p>
 
+<p><%= item.file %></p>
+
 <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
     <a class="btn btn-xs btn-warning" href="/items/<%= item._id %>/edit">Edit</a>
     <form id="delete-form" action="/items/<%= item._id %>?_method=DELETE" method="POST">

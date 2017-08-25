@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var itemsSchema = new mongoose.Schema({
     name: String,
     image: String,
+    file: String,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

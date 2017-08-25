@@ -1,0 +1,36 @@
+
+<form action="/upload_images/<%= imgs.id %>" method="post" enctype="multipart/form-data">
+  <input type="file" name="uploadedImages" value="UPLOAD" multiple>
+  <input type="submit" value="UPLOAD">
+  
+</form>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <% imgs.urls.forEach(function(url){ %>
+    <% var urlName = url.slice(42, -4); %>
+    <% if(url != "") { %>
+        <div>
+        <img src="<%= url %>"></img>
+        <a href="/remove/<%=urlName%>">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </div>
+    <% }  %>
+    
+  <% }); %>
+  
+
+  <a class="btn btn-primary" href="/newitem" role="button">DOWNUPLOAD</a>
+  
+  
+
+
+
+
+
+
+
+
+

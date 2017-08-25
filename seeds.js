@@ -9,6 +9,8 @@ var data = [
          {name: "MadeWell", image: "http://wx3.sinaimg.cn/mw690/6d48f423gy1fh517g1by1j20m80eu75o.jpg"},
          {name: "DIOR2", image: "http://wx2.sinaimg.cn/mw690/6d48f423gy1fh517ed4vlj20m80eu3zq.jpg"}
     ]
+    
+
 
 function seedDB(){
     //remove all the items

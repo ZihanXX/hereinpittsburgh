@@ -17,7 +17,7 @@ var itemRoutes      = require("./routes/items"),
     indexRoutes     = require("./routes/index");
 
 app.use(bodyParser.urlencoded({extended: true}));
-mongoose.connect("mongodb://localhost/hip_v3", { useMongoClient: true });
+mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
@@ -45,6 +45,8 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/items/:id/comments", commentRoutes);
 app.use("/items", itemRoutes);
+
+
 
 //make sure the server is running
 app.listen(process.env.PORT, process.env.IP, function(){
