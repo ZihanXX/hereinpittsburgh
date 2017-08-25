@@ -10,14 +10,13 @@ var express         = require("express"),
     
 var Imgs = require("./models/imgs");
 
-var multer  = require('multer')
-var upload = multer({ dest: 'tmpImages/' })
-
-var im = require('imagemagick');
-const del = require('del');
-var s3 = require('s3');
-var fs = require('fs');
-var urlExists = require('url-exists');
+var multer          = require('multer'),
+    upload          = multer({ dest: 'tmpImages/' }),
+    im              = require('imagemagick'),
+    s3              = require('s3'),
+    fs              = require('fs'),
+    urlExists       = require('url-exists');
+const del           = require('del');
 
 
 var client = s3.createClient({
@@ -73,20 +72,20 @@ app.use(methodOverride("_method"));
 // });
 
 
-app.get("/up/add", function(req, res){
-    res.render("addImages1");
+app.get("/add_imgs", function(req, res){
+    res.render("new_imgs");
 });
-app.get("/up/add/:id", function(req, res){
+app.get("/add_imgs/:id", function(req, res){
     Imgs.findById(req.params.id, function(err, imgs){
         if(err) {console.log(err);}
         else {
             //console.log(imgs);
-            res.render("addImages", {imgs: imgs});
+            res.render("add_imgs", {imgs: imgs});
         }
     });
 });
 
-app.get("/remove/:urlName", function(req, res){
+app.get("/remove_imgs/:urlName", function(req, res){
     var imgsId = req.params.urlName.slice(0, -1);
     var urlIndex = req.params.urlName.slice(-1) - 1;
     Imgs.findById(imgsId, function(err, imgs) {
@@ -101,7 +100,7 @@ app.get("/remove/:urlName", function(req, res){
     });
 });
 
-app.post('/upload_images1', upload.array('uploadedImages', 20), function (req, res, next) {
+app.post('/add_imgs', upload.array('uploadedImages', 20), function (req, res, next) {
     var files = req.files;
     var newImgs = {count: 0, urls: []};
     Imgs.create(newImgs, function(err, imgs){
@@ -112,7 +111,7 @@ app.post('/upload_images1', upload.array('uploadedImages', 20), function (req, r
     });
 });
 
-app.post('/upload_images/:id', upload.array('uploadedImages', 20), function (req, res, next) {
+app.post('/add_imgs/:id', upload.array('uploadedImages', 20), function (req, res, next) {
     var files = req.files;
     Imgs.findById(req.params.id, function(err, imgs){
         if(err) {console.log(err)}
@@ -176,7 +175,7 @@ var editImgs = function(files, imgs, res, req) {
     var uploadInterval = setInterval(function() {
         if(uploaded_files == countEnd - countStart + 1) {
             //del("tmpImages/");
-            res.redirect("/up/add/" + imgs.id);
+            res.redirect("/add_imgs/" + imgs.id);
             clearInterval(uploadInterval);
         }
     }, 100);

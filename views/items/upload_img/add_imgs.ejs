@@ -1,0 +1,35 @@
+
+<form action="/items/new/add_imgs/<%= imgs.id %>" method="post" enctype="multipart/form-data">
+  <input type="file" name="uploadedImages" value="UPLOAD" multiple>
+  <input type="submit" value="CONTINUEADD">
+</form>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<% imgs.urls.forEach(function(url){ %>
+  <% var urlName = url.slice(42, -4); %>
+  <% if(url != "") { %>
+      <div>
+        <img src="<%= url %>" style="max-width:100px; max-height:100px;"></img>
+        <a href="/items/new/remove_imgs/<%=urlName%>">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </div>
+  <% }  %>
+<% }); %>
+
+<% if(imgs.count > 4) { %>
+  <p style="color: red">Please delete some imgs. The max is 4.</p>
+<% } else { %>
+  <a class="btn btn-primary" href="/items/new/imgs_added" role="button">DONEUPLOAD</a>
+<% }%>
+
+  
+  
+
+
+
+
+
+
+
+
+

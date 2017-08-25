@@ -1,7 +1,11 @@
 <% include ../partials/header %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<p><img src="<%= item.image %>"></p>
+
+<% item.imgs.urls.forEach(function(url){ %>
+    <p><img src="<%= url %>"></p>
+<% }); %>
+
 
 <p><%= item.name %></p>
 <p><%= item.category.catename %></p>
@@ -46,6 +50,7 @@
 </p>
 
 <% item.comments.forEach(function(comment){ %>
+    <% console.log(comment); %>
     <p><%= comment.author.username %> - <%= comment.text %></p>
 <% }); %>
 

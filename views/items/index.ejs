@@ -18,15 +18,20 @@
     </div>
     
     <div class="row" style="display:flex; flex-wrap:wrap;">
-        <% items.forEach(function(items){ %>
+        <% items.forEach(function(item){ %>
         <div class="col-md-3 col-sm-6">
             <div class="thumbnail">
-                <img src="<%= items.image %>">
+                <% for(var i=0; i<item.imgs.urls.length; i++) { %>
+                    <% if(item.imgs.urls[i] != "") { %>
+                        <img src="<%= item.imgs.urls[i] %>">
+                        <% i = item.imgs.urls.length - 1; %>
+                    <% } %>
+                <% } %>
                 <div class="caption">
-                    <h4><%= items.name %></h4>
+                    <h4><%= item.name %></h4>
                 </div>
                 <p>
-                    <a href="/items/<%= items._id %>" class="btn btn-frimary">More Info</a>
+                    <a href="/items/<%= item._id %>" class="btn btn-frimary">More Info</a>
                 </p>
             </div>
         </div>

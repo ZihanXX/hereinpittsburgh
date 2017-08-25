@@ -1,24 +1,20 @@
-=======vv8========
-Jul.16 connect-flash
-Jul.16 when the password or username is wrong, alert
-        when edit item, change the date_update
-        the limits of password and username
-        username is email, set another username to save a name
-        no duplicate email or personal_name
+=======vv9========
+Jul.16-17  local image uploading combine with new item
+Jul.17  delete tmpImages
+        upload image size, number
 
 TODO: 
-* local image uploading combine with new item
 * complete the database, all
+* other items by this same user
+* message when uploading the images: "please be patient"
 * refine google map for housing(make it maker instead of circle)
-* wechat Login!! you need it
-* upload image size, number
 * "are you sure you want to ...?"
 * two languages
 * create wechat message and copy it with one click
 * one-item post / multi-item post(mainly text): images up to 4 / 4
-* other items by this same user
 * about pittsburgh (users can add new spots)
 * zhushi all the codes
+* * wechat Login!! you need it \\I don't!
 * contact us (jubao)  there is no us
 * Facebook, Wechat, Google LOGIN*
 * register email, edu ortherized*

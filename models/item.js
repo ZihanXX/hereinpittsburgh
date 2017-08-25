@@ -4,6 +4,10 @@ var mongoose = require("mongoose");
 var itemsSchema = new mongoose.Schema({
     name: String,
     image: String,
+    imgs: {
+        imgs_id: String,
+        urls: []
+    },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
