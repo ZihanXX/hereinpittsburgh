@@ -29,6 +29,27 @@
                 <div class="form-group">
                     <input class="form-control" type="text" name="category" placeholder="category">
                 </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="wechat" value="<%= currentUser.wechat %>">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="descreption" placeholder="descreption">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="date_av" placeholder="date_av">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="price" placeholder="price">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="price_org" placeholder="price_org">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="orgUrl" placeholder="orgUrl">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="delivery" placeholder="delivery">
+                </div>
                 
                 
                 <!--map-->
@@ -38,9 +59,11 @@
                     <div id="map"></div>
                 </div>
                 
-                <div class="form-group">
-                    <button class="btn btn-lg btn-default btn-block">Submit!</button>
-                </div>
+                <% if(uploadDone) { %>
+                  <div class="form-group">
+                      <button class="btn btn-lg btn-default btn-block">Submit!</button>
+                  </div>
+                <% }%>
                 <a href="/items">Go Back</a>
             </form>
         </div>
@@ -92,7 +115,7 @@
     autocomplete.addListener('place_changed', function() {
       marker.setVisible(false);
       var place = autocomplete.getPlace();
-      console.log(place);
+      // console.log(place);
       if (!place.geometry) {
         window.alert("No details available for input: '" + place.name + "'");
         return;

@@ -34,7 +34,7 @@ var client = s3.createClient({
 });
 
 
-//items page
+//ITEMS INDEX PAGE
 router.get("/items", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
     //console.log(req.session);
@@ -47,7 +47,56 @@ router.get("/items", function(req, res){
     });
 });
 
-//search
+//CATEGORY (has to be placed ahead)
+//furniture page
+router.get("/items/category=furniture", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    Item.find({category: "Furniture"}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) throw err;
+        else res.render("items/index", {items: items});
+    });
+});
+//appliances page
+router.get("/items/category=appliances", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    Item.find({category: "Appliances"}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) throw err;
+        else res.render("items/index", {items: items});
+    });
+});
+//books page
+router.get("/items/category=books", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    Item.find({category: "Books"}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) throw err;
+        else res.render("items/index", {items: items});
+    });
+});
+//housing page
+router.get("/items/category=housing", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    Item.find({category: "Housing"}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) throw err;
+        else res.render("items/index", {items: items});
+    });
+});
+//events page
+router.get("/items/category=events", function(req, res){
+    req.session.returnTo = req.path; //RECORD THE PATH
+    //console.log(req.session);
+    Item.find({category: "Events"}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) throw err;
+        else res.render("items/index", {items: items});
+    });
+});
+
+
+
+//SEARCH
 router.get("/items/search", function(req, res) {
     var query = req.query.q;
     req.session.returnTo = req.path + "?q=" + query; //RECORD THE PATH
@@ -65,7 +114,7 @@ router.get("/items/search", function(req, res) {
 router.get("/items/new", middleware.isLoggedIn, function(req, res){
     res.render("items/new", {imgs: "not exist", uploadDone: false});
 });
-router.get("/items/new/add_imgs/:id", function(req, res){
+router.get("/items/new/add_imgs/:id", middleware.isLoggedIn, function(req, res){
     req.session.imgsId = req.params.id; //RECORD THE imgsId
     Imgs.findById(req.params.id, function(err, imgs){
         
@@ -75,7 +124,7 @@ router.get("/items/new/add_imgs/:id", function(req, res){
         }
     });
 });
-router.get("/items/new/imgs_added", function(req, res) {
+router.get("/items/new/imgs_added", middleware.isLoggedIn, function(req, res) {
     Imgs.findById(req.session.imgsId, function(err, imgs){
         if(err) {console.log(err);}
         else {
@@ -166,7 +215,7 @@ var editImgs = function(files, imgs, res, req) {
         }
     }, 100);
 }
-router.get("/items/new/remove_imgs/:urlName", function(req, res){
+router.get("/items/new/remove_imgs/:urlName", middleware.isLoggedIn, function(req, res){
     var imgsId = req.params.urlName.slice(0, -1);
     var urlIndex = req.params.urlName.slice(-1) - 1;
     Imgs.findById(imgsId, function(err, imgs) {
@@ -182,27 +231,39 @@ router.get("/items/new/remove_imgs/:urlName", function(req, res){
 });
 
 
-// post new items
+//POST NEW ITEM
 router.post("/items", middleware.isLoggedIn, function(req, res, next){
     var imgsId = req.session.imgsId;
-    // console.log(imgsId);
     var name = req.body.name;
-    var image = req.body.image;
+    var wechat = req.body.wechat;
+    var category = req.body.category;
+    var type;
+    switch (category) {
+        case 'Furniture': type = "sale"; break;
+        case 'Appliances': type = "sale"; break;
+        case 'Books': type = "sale"; break;
+        case 'Housing': type = "housing"; break;
+        case 'Events': type = "events"; break;
+    }
+    var descreption = req.body.descreption;
+    var date_av = req.body.date_av;
+    var isEnd = false;
+    var price = req.body.price;
+    var price_org = req.body.price_org;
+    var orgUrl = req.body.orgUrl;
+    var delivery = req.body.delivery;
     //cate是db里一个Category，而category只是item里的一个field
     Category.findOne({name: req.body.category}, function(err, cate){
         if(err){console.log(err)}
         else {
-            var category = {
-                id: cate._id,
-                catename: req.body.category
-            }
             var author = {
                 id: req.user._id,
-                username: req.user.username
+                username: req.user.personal_name
             }
-            var newItem = new Item({name: name, category: category, image: image, author: author, 
-                            date_crt: currentTime(), date_update: currentTime(), 
-                            address: {name: req.body.address, place_id: req.body.place_id}});
+            var newItem = new Item({name: name, category: category, type: type, wechat: wechat, author: author, 
+                            date_crt: currentTime(), date_update: currentTime(), descreption: descreption,
+                            date_av: date_av, isEnd: isEnd, price: price, price_org: price_org, orgUrl: orgUrl,
+                            delivery: delivery, address: {name: req.body.address, place_id: req.body.place_id} });
             Imgs.findById(imgsId, function(err, imgs) {
                 if(err) throw err;
                 else {
@@ -211,21 +272,19 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
                     newItem.imgs.imgs_id = imgsId;
                     newItem.imgs.urls = imgs.urls;
                     newItem.save();
+                    // console.log(newItem);
                 }
             });
             cate.items.push(newItem);
             cate.save();
             req.user.items.push(newItem);
             req.user.save(); 
-            del("tmpImages/");
             res.redirect("/items");
         }
     });
 });
 
-
-
-//show item detail on one page
+//SHOW ITEM DETAIL
 router.get("/items/:id", function(req, res) {
     req.session.returnTo = req.path; //RECORD THE PATH
     //console.log(req.session);
@@ -305,7 +364,7 @@ router.delete("/items/:id", middleware.checkItemOwnerShip, function(req, res){
             res.redirect("/items");
         } else {
             //console.log(item);
-            Category.findOne({name: item.category.catename}, function(err, cate) {
+            Category.findOne({name: item.category}, function(err, cate) {
                 if(err) {console.log(err);}
                 else {
                     //console.log(cate);
@@ -338,45 +397,9 @@ router.delete("/items/:id", middleware.checkItemOwnerShip, function(req, res){
 });
 
 
-//CATEGORY
-//category1 page
-router.get("/items/category=1", function(req, res){
-    req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
-    Category.findOne({name: "1"}).populate("items").exec(function(err, cate){
-        if(err) {
-            console.log(err);
-        } else {
-            res.render("items/index", {items: cate.items});
-        }
-    });
-});
-//category2 page
-router.get("/items/category=2", function(req, res){
-    req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
-    Category.findOne({name: "2"}).populate("items").exec(function(err, cate){
-        if(err) {
-            console.log(err);
-        } else {
-            res.render("items/index", {items: cate.items});
-        }
-    });
-});
-//category3 page
-router.get("/items/category=3", function(req, res){
-    req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
-    Category.findOne({name: "3"}).populate("items").exec(function(err, cate){
-        if(err) {
-            console.log(err);
-        } else {
-            res.render("items/index", {items: cate.items});
-        }
-    });
-});
 
-//get the date function
+
+//CURRENT DATE
 var currentTime = function() {
     var utcNow = new Date();
     var now = new Date(Date.UTC(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate(), 

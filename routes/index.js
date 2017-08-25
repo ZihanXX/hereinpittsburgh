@@ -27,7 +27,8 @@ router.post("/register", function(req, res) {
     User.findOne({personal_name: req.body.personal_name}, function(err, existingUser){
         if (!err && existingUser){ exitMassage = "please choose another name";}
     });
-    var newUser = new User({username: req.body.username, personal_name: req.body.personal_name}); 
+    var newUser = new User({username: req.body.username, 
+                            personal_name: req.body.personal_name, wechat: req.body.wechat}); 
     User.register(newUser, req.body.password, function(err, user){
         if(err) {
             var errMassage = err.message;

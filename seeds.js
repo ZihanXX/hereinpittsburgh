@@ -6,9 +6,11 @@ var Item        = require("./models/item"),
     Imgs        = require("./models/imgs")
     
 var catdata = [
-    {name: "1", items: []},
-    {name: "2", items: []},
-    {name: "3", items: []}
+    {name: "Furniture", items: []},
+    {name: "Appliances", items: []},
+    {name: "Books", items: []},
+    {name: "Housing", items: []},
+    {name: "Events", items: []}
     ]
 
 //====CLEAR ALL THE DATA EXCEPT FOR CATES====//

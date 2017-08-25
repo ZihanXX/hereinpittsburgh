@@ -16,7 +16,8 @@ var UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Item"
         }
-    ]
+    ],
+    wechat: String
 });
 
 UserSchema.plugin(passprotLocalMongoose);

@@ -7,8 +7,15 @@
 <% }); %>
 
 
-<p><%= item.name %></p>
-<p><%= item.category.catename %></p>
+<p>item name: <%= item.name %></p>
+<p>category: <%= item.category %></p>
+<p>wechat: <%= item.wechat %></p>
+<p>descreption: <%= item.descreption %></p>
+<p>date_av: <%= item.date_av %></p>
+<p>price: <%= item.price %></p>
+<p>price_org: <%= item.price_org %></p>
+<p>orgUrl: <%= item.orgUrl %></p>
+<p>delivery: <%= item.delivery %></p>
 
 <p> 
     <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
@@ -50,7 +57,6 @@
 </p>
 
 <% item.comments.forEach(function(comment){ %>
-    <% console.log(comment); %>
     <p><%= comment.author.username %> - <%= comment.text %></p>
 <% }); %>
 
