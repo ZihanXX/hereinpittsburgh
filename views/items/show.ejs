@@ -1,0 +1,17 @@
+<% include ../partials/header %>
+
+<p><img src="<%= item.image %>"></p>
+
+<p><%= item.name %></p>
+
+<p>
+    <a href="/index/<%= item._id %>/comments/new">Add New Comment</a>
+</p>
+
+<% item.comments.forEach(function(comment){ %>
+    <p><%= comment.author %> - <%= comment.text %></p>
+<% }); %>
+
+
+
+<% include ../partials/footer %>

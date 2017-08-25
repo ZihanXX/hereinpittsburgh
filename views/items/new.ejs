@@ -1,10 +1,10 @@
-<% include partials/header %>
+<% include ../partials/header %>
 
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Create a New Item</h1>
         <div style="width: 30%; margin: 30px auto;">
-            <form action="/items" method="POST">
+            <form action="/index" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="name" name="name" placeholder="name">
                 </div>
@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <button class="btn btn-lg btn-default btn-block">Submit!</button>
                 </div>
-                <a href="/items">Go Back</a>
+                <a href="/index">Go Back</a>
             </form>
         </div>
         
@@ -25,4 +25,4 @@
 
 
 
-<% include partials/footer %>
+<% include ../partials/footer %>

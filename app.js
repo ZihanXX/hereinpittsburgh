@@ -3,41 +3,15 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var Item = require("./models/item");
+var seedDB = require("./seeds");
+var Comment = require("./models/comment");
+// var User = require("./models/user");
 app.use(bodyParser.urlencoded({extended: true}));
-mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
+mongoose.connect("mongodb://localhost/hip_v3", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
-
-//set up schema
-var itemsSchema = new mongoose.Schema({
-    name: String,
-    image: String
-});
-//create a data model called "Item"
-var Item = mongoose.model("Item", itemsSchema);
-
-// //create a new item according to Item model
-// Item.create(
-//     {
-//         name: "MadeWell",
-//         image: "http://wx3.sinaimg.cn/mw690/6d48f423gy1fh517g1by1j20m80eu75o.jpg"
-//     }, function(err, item){
-//         if(err) {
-//             console.log(err);
-//         } else {
-//             console.log("NEWLY CREATED ITEM: ");
-//             console.log(item);
-//         }
-//     }
-// );
-
-// //data items
-// var items = [
-//          {name: "CHANEL", image: "http://wx1.sinaimg.cn/mw690/6d48f423gy1fh517d2su3j20m80euabu.jpg"},
-//          {name: "DIOR", image: "http://wx2.sinaimg.cn/mw690/6d48f423gy1fh517ed4vlj20m80eu3zq.jpg"},
-//          {name: "BOYY", image: "http://wx1.sinaimg.cn/mw690/6d48f423gy1fh517bjbvtj20m80euabm.jpg"},
-//          {name: "MadeWell", image: "http://wx3.sinaimg.cn/mw690/6d48f423gy1fh517g1by1j20m80eu75o.jpg"},
-//     ]
+seedDB();
 
 //landing page
 app.get("/", function(req, res){
@@ -52,7 +26,7 @@ app.get("/index", function(req, res){
         if(err) {
             console.log(err);
         } else {
-            res.render("index", {items: items});
+            res.render("items/index", {items: items});
         }
     })
 });
@@ -77,20 +51,56 @@ app.post("/index", function(req, res){
 
 //show the form that will send the data to /index
 app.get("/index/new", function(req, res){
-    res.render("new.ejs");
+    res.render("items/new");
 });
 
 //show item detail on one page
 app.get("/index/:id", function(req, res) {
     //res.send("This will be the show page one day");
-    Item.findById(req.params.id, function(err, foundItem){
+    Item.findById(req.params.id).populate("comments").exec(function(err, foundItem){
         if(err) {
             console.log(err);
         } else {
-            res.render("show", {item: foundItem});
+            console.log(foundItem);
+            res.render("items/show", {item: foundItem});
         }
     });
 });
+
+//================COMMENTS ROUTES BELOW================
+
+app.get("/index/:id/comments/new", function(req, res) {
+    //find item by id
+    Item.findById(req.params.id, function(err, item){
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("comments/new", {item: item});   
+        }
+    });
+});
+
+app.post("/index/:id/comments", function(req, res){
+    Item.findById(req.params.id, function(err, item) {
+        if(err) {
+            console.log(err);
+            res.redirect("/index");
+        } else {
+            Comment.create(req.body.comment, function(err, comment){
+                if(err) {console.log(err);}
+                else {
+                    item.comments.push(comment);
+                    item.save();
+                    res.redirect("/index/" + item._id);
+                }
+            });
+            console.log(req.body.comment);
+            
+        }
+    });
+});
+
+//================COMMENTS ROUTES ABOVE================
 
 //make sure the server is running
 app.listen(process.env.PORT, process.env.IP, function(){
