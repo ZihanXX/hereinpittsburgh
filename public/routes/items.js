@@ -18,10 +18,14 @@ router.get("/", function(req, res){
 });
 
 //post new items
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
-    var newItem = {name: name, image: image};
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newItem = {name: name, image: image, author: author};
     //creare a new item and save to dbs
     Item.create(newItem, function(err, newItem){
         if(err) {
@@ -33,7 +37,7 @@ router.post("/", function(req, res){
 });
 
 //show the form that will send the data to /items
-router.get("/new", function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
     res.render("items/new");
 });
 
@@ -48,6 +52,17 @@ router.get("/:id", function(req, res) {
         }
     });
 });
+
+//middleware
+//copied form index.js
+//check if logged in, and react to it
+//问题是，每一次loggin之后都会回到items页,怎么才能改成回到当前页呢
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 
 module.exports = router;

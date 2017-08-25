@@ -3,13 +3,14 @@
 <p><img src="<%= item.image %>"></p>
 
 <p><%= item.name %></p>
+<p><%= item.author.username %></p>
 
 <p>
     <a href="/items/<%= item._id %>/comments/new">Add New Comment</a>
 </p>
 
 <% item.comments.forEach(function(comment){ %>
-    <p><%= comment.author %> - <%= comment.text %></p>
+    <p><%= comment.author.username %> - <%= comment.text %></p>
 <% }); %>
 
 

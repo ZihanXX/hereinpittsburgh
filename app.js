@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect("mongodb://localhost/hip_v3", { useMongoClient: true });
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
-seedDB();
+//seedDB();
 
 //PASSPORT CONFIGURATION
 app.use(require("express-session")({
