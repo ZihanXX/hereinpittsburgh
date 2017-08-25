@@ -1,8 +1,23 @@
-<% imgs.urls.forEach(function(url){ %>
-  <% var urlName = url.slice(42, -4); %>
-  <% if(url != "") { %>
-      <div>
-        <img src="<%= url %>" style="max-width:100px; max-height:100px;"></img>
+<div class="ui link cards">
+  <% imgs.urls.forEach(function(url) { %>
+    <% if(url != "") { %>
+      <div class="card" style="width: 100px; height: 100px">
+        <div><img id="img" class="ui image" src="<%= url %>" /></div>
       </div>
-  <% }  %>
-<% }); %>
+    <% }  %>
+  <% }); %>
+</div>
+
+<style>
+  #img {
+    max-height: 100px;  
+    max-width: 100px;
+    position: absolute;  
+    top: 0;  
+    bottom: 0;  
+    left: 0;  
+    right: 0;  
+    margin: auto;
+    border-radius: 0px !important;
+  }
+</style>

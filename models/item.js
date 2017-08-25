@@ -30,10 +30,9 @@ var itemsSchema = new mongoose.Schema({
         place_id: String
     },
     descreption: String,
-    date_av: String,
+    date_av: [], //[0]: start, [1]: end
     isEnd: Boolean,
     price: String,
-    price_org: String,
     orgUrl: String,
     delivery: String
 });

@@ -1,27 +1,33 @@
-=======vv10========
-Jul.17 small bugs: cannot see submit button if uploading images are not done
-        auto fill wechat for items
-        fix that category page not being sorted
-        complete the database, all
+=======vv12========
+Jul.22  edit page
+        isEnd
+        upload file too large alert* [no]
+        type in password twice
+Jul.27  copy wechat info to clipboard
+        各种required输入，各种输入的长度限制格式限制
+        square the card
+        各种格式
+        one-item post / multi-item post(mainly text): images up to 4 / 4
+        create wechat message and copy it with one click
+Jul.28  new/show differrent category
+        refine google map for housing(make it maker instead of circle)
+        refine everything
+Jul.29  fix uploading bugs
+        upload errs
+
 
 TODO: 
-* edit isEnd
-* differrent types with differrent pages
-* other items by this same user
-* message when uploading the images: "please be patient"
-* refine google map for housing(make it maker instead of circle)
-* "are you sure you want to ...?"
 * two languages
-* create wechat message and copy it with one click
-* one-item post / multi-item post(mainly text): images up to 4 / 4
+* cur_item_count on show page*
+* message when uploading the images: "please be patient"*
+* "are you sure you want to ...?": 1)delete*
 * 有bug挂掉怎么办，怎么保证不会挂掉，handle所有err？
 * about pittsburgh (users can add new spots)
 * zhushi all the codes
-* * wechat Login!! you need it \\I don't!
+* wechat Login!! you need it \\I don't!
 * contact us (jubao)  there is no us
 * Facebook, Wechat, Google LOGIN*
 * register email, edu ortherized*
-* other register errs like invalid username*
 * create pdf or long imaage for items*
 * 微信公众号，推送
 * 宣传视频，文案
@@ -42,14 +48,10 @@ image           image           image/*         wechat_img*
 Category        Category        Category        Item
 address*        address         address/*       favorites
 date_av*        date_av         date_av
-                date_note*      date_note*
 isEnd           isEnd           isEnd
                 price           price
-                price_org       price_org*
 orgUrl*         orgUrl          orgUrl*
 wechat*         wechat          wechat
-wechat_img*     wechat_img*     wechat_img*
-                ask/            ask/       
 report*         report*         report*
                 delivery
 date_update     date_update     date_update

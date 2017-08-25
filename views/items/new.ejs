@@ -1,141 +1,231 @@
 <% include ../partials/header %>
 
-<div class="container">
-    <div class="row">
-        <h1 style="text-align: center;">Create a New Item</h1>
-        <div style="width: 50%; margin: 30px auto;">
-          
-          
-          <!--images-->
-                
-                <div>
-                  <% if(!uploadDone) { %>
-                    <p>You can upload up to 4 images for this item.</p>
-                    <% if(imgs === "not exist") {  %>
-                      <% include upload_img/new_imgs %>
-                    <% } else { %>
-                      <% include upload_img/add_imgs %>
-                    <% } %>
-                  <% } else { %>
-                    <% include upload_img/show_imgs %>
-                  <% }%>
-                </div>
-          
-          
-            <form action="/items" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="name" placeholder="name">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="category" placeholder="category">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="wechat" value="<%= currentUser.wechat %>">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="descreption" placeholder="descreption">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="date_av" placeholder="date_av">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="price" placeholder="price">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="price_org" placeholder="price_org">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="orgUrl" placeholder="orgUrl">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="delivery" placeholder="delivery">
-                </div>
-                
-                
-                <!--map-->
-                <div>
-                    <input id="place-id" type="text" name="place_id" placeholder="place_id">
-                    <input id="pac-input" type="text" name="address" placeholder="Enter a location">
-                    <div id="map"></div>
-                </div>
-                
-                <% if(uploadDone) { %>
-                  <div class="form-group">
-                      <button class="btn btn-lg btn-default btn-block">Submit!</button>
-                  </div>
-                <% }%>
-                <a href="/items">Go Back</a>
-            </form>
-        </div>
-        
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/76959c6f7d33a527b49be76789e984a0a407350b/dist/calendar.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/76959c6f7d33a527b49be76789e984a0a407350b/dist/calendar.min.js"></script>
+
+
+<div class="ui container">
+  
+  <!--header-->
+  <div style="margin-top: 50px">
+    <% if(catename == "Sale") { %>
+      <h2 style="text-align: center">
+      <i class="shop grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Create a New On Sale Item</h2>
+    <% } else if(catename == "Housing") { %>
+      <h2 style="text-align: center">
+      <i class="building outline grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Create a New Housing Item</h2>
+    <% } else { %>
+      <h2 style="text-align: center">
+      <i class="ticket grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Create a New Event</h2>
+    <% } %>
+  </div>
+  
+  <!--item info-->
+  <div style="max-width: 600px; margin: 30px auto">
+    
+    <!--images-->
+    <div style="margin-top: 50px">
+      <!--label-->
+      <h4 class="ui horizontal divider header">
+        <i class="image icon"></i>
+        Upload Images
+      </h4>
+      <div>
+        <% if(!uploadDone) { %>
+          <p style="text-align: center; color: grey">You can upload up to 4 images. The maxmum size of each is up to 5Mb.</p>
+          <% if(imgs === "not exist") {  %>
+            <% include upload_img/new_imgs %>
+          <% } else { %>
+            <% include upload_img/add_imgs %>
+          <% } %>
+        <% } else { %>
+          <% include upload_img/show_imgs %>
+        <% }%>
+      </div>
     </div>
+          
+    <!--form-->
+    <div style="margin-top: 50px">
+    <form class="ui form" action="/items" method="POST">
+      <!--label-->
+      <h4 class="ui horizontal divider header">
+        <i class="bar chart icon"></i>
+        Details
+      </h4>
+      <!--name-->
+      <div class="field">
+        <label>Name</label>
+        <div class="ui corner labeled input">
+          <input type="text" name="name" placeholder="name" maxlength="18" required>
+          <div class="ui corner label">
+            <i class="asterisk icon"></i>
+          </div>
+        </div>
+      </div>
+      <!--price-->
+      <% if(catename == "Sale" || catename == "Housing") { %>
+        <div class="field">
+          <label>Price</label>
+          <div class="ui right corner labeled input">
+            <label for="amount" class="ui label">$</label>
+            <input type="text" name="price" placeholder="price" id="amount" maxlength="10" required>
+            <div class="ui corner label">
+              <i class="asterisk icon"></i>
+            </div>
+          </div>
+        </div>
+      <% } %>
+      <!--category-->
+      <div class="field" style="visibility: hidden; height: 0; width: 0; margin: 0">
+      <!--<div class="field">-->
+        <label>Category (click to choose)</label>
+        <div class="ui corner labeled input">
+          <select name="category" class="ui simple fluid selection dropdown" id="cate-dropdown">
+            <% if(catename == "Sale") { %>
+              <option value="Sale" selected>On Sale</option>
+              <option value="Housing">Housing</option>
+              <option value="Events">Events</option>
+            <% } else if(catename == "Housing") {%>
+              <option value="Sale">On Sale</option>
+              <option value="Housing" selected>Housing</option>
+              <option value="Events">Events</option>
+            <% } else { %>
+              <option value="Sale">On Sale</option>
+              <option value="Housing">Housing</option>
+              <option value="Events" selected>Events</option>
+            <% } %>
+          </select>
+          <div class="ui corner label">
+            <i class="asterisk icon"></i>
+          </div>
+        </div>
+      </div>
+      <!--delivery-->
+      <% if(catename == "Sale") { %>
+        <div class="field">
+          <label>Delivery (click to choose)</label>
+          <select name="delivery" class="ui simple fluid selection dropdown" id="deli-dropdown">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+            <option value="dependable">Dependable</option>
+          </select>
+        </div>
+      <% } %>
+      <!--descreption-->
+      <div class="field">
+        <label>Description</label>
+        <div class="field">
+          <% if(catename == "Sale") { %>
+            <textarea name="descreption" rows="3" placeholder="If you want to post mutiple items in one post, please list the prices here"></textarea>
+          <% } else { %>
+            <textarea name="descreption" rows="3" placeholder="Details Info"></textarea>
+          <% } %>
+        </div>
+      </div>
+      <!--wechat-->
+      <div class="field">
+        <label>Contact Wechat</label>
+        <div class="ui corner labeled input">
+          <% if(catename == "Events") { %>
+            <input type="text" name="wechat" value="<%= currentUser.wechat %>">
+          <% } else { %>
+            <input type="text" name="wechat" value="<%= currentUser.wechat %>" required>
+            <div class="ui corner label">
+              <i class="asterisk icon"></i>
+            </div>
+          <% } %>
+        </div>
+      </div>
+      <!--date_av-->
+      <div class="field">
+        <label>Available Dates</label>
+        <div class="two fields">
+          <div class="field">
+            <div class="ui calendar" id="rangestart">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input name="date_av[0]" type="text" placeholder="Start">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui calendar" id="rangeend">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input name="date_av[1]" type="text" placeholder="End">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--orgUrl-->
+      <div class="field">
+        <label>Reference URL</label>
+        <% if(catename == "Sale") { %>
+          <input type="text" name="orgUrl" placeholder="The original url would give more details for perspective buyers.">
+        <% } else if(catename == "Housing") { %>
+          <input type="text" name="orgUrl" placeholder="Do you have detail information from the management?">
+        <% } else { %>
+          <input type="text" name="orgUrl" placeholder="The official site for this event.">
+        <% } %>
+      </div>
+      <!--map-->
+      <div class="field">
+        <label>Address</label>
+        <div class="field" style="visibility: hidden; height: 0; padding: 0; margin: 0">
+          <input id="place-id" type="text" name="place_id" placeholder="place_id">
+        </div>
+        <div class="ui input field">
+          <% if(catename == "Sale") { %>
+            <input id="pac-input" type="text" name="address" placeholder="To protect your privicy, the exact address won't be shown.">
+          <% } else { %>
+            <input id="pac-input" type="text" name="address" placeholder="Enter a location">
+          <% } %>
+        </div>
+        <div class="field">
+          <div id="map"></div>
+          <% if(catename == "Sale") { %>
+            <% include maps/map_circle %>
+          <% } else { %>
+            <% include maps/map_marker %>
+          <% } %>
+        </div>
+      </div>
+      <!--submit-->
+      <% if(uploadDone) { %>
+        <div style="width: 200px; margin: 30px auto">
+          <button class="ui teal button" style="width: 200px">Submit</button>
+        </div>
+      <% }%>
+    </form>
+
+  </div>
+  <!--item info above-->
+  
 </div>
 
 
-<style>
-  #map {
-    height: 400px;
-    width: 600px;
-  }
-  #pac-input {
-    background-color: #fff;
-    /*font-family: Roboto;*/
-    font-size: 15px;
-    font-weight: 300;
-    margin-left: 12px;
-    padding: 0 11px 0 13px;
-    text-overflow: ellipsis;
-    width: 400px;
-  }
-  #pac-input:focus {
-    border-color: #4d90fe;
-  }
-  #place-id {
-    width: 0;
-    visibility: hidden;
-  }
-</style>
-
 
 <script>
-  function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.445, lng: -79.95},
-      zoom: 13
-    });
-    var input = document.getElementById('pac-input');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    var marker = new google.maps.Circle({
-      strokeWeight: 0,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-      map: map,
-      radius: 150
-    });
-    autocomplete.addListener('place_changed', function() {
-      marker.setVisible(false);
-      var place = autocomplete.getPlace();
-      // console.log(place);
-      if (!place.geometry) {
-        window.alert("No details available for input: '" + place.name + "'");
-        return;
-      }
-      // If the place has a geometry, then present it on a map.
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.serZoom(17);  // Why 17? Because it looks good.
-      }
-      marker.setCenter(place.geometry.location);
-      marker.setVisible(true);
-      document.getElementById("place-id").value = place.place_id;
-    });
-  }
+  $(document).ready(function() {
+      // $('.ui.dropdown').dropdown();
+      $('#deli-dropdown').dropdown();
+      $('#cate-dropdown').dropdown();
+  });
+  $('#rangestart').calendar({
+    type: 'date',
+    endCalendar: $('#rangeend')
+  });
+  $('#rangeend').calendar({
+    type: 'date',
+    startCalendar: $('#rangestart')
+  });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&libraries=places&callback=initMap"
-    async defer></script>
-
 
 
 <% include ../partials/footer %>

@@ -2,103 +2,329 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-<% item.imgs.urls.forEach(function(url){ %>
-    <p><img src="<%= url %>"></p>
-<% }); %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/js/lightbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
 
-<p>item name: <%= item.name %></p>
-<p>category: <%= item.category %></p>
-<p>wechat: <%= item.wechat %></p>
-<p>descreption: <%= item.descreption %></p>
-<p>date_av: <%= item.date_av %></p>
-<p>price: <%= item.price %></p>
-<p>price_org: <%= item.price_org %></p>
-<p>orgUrl: <%= item.orgUrl %></p>
-<p>delivery: <%= item.delivery %></p>
-
-<p> 
-    <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
-        <a href="/myprofile/<%= user._id %>"><%= item.author.username %></a>
+<% if(item.isEnd == false) { %>
+<!--show the item below-->
+<div style="max-width: 600px; margin: 30px auto;">
+  <!--category-->
+  <div style="display:inline;">
+    <% if(item.category == "Sale") { %>
+      <i class="shop large icon" style="margin-bottom: 10px"></i>
+    <% }else if(item.category == "Housing") {%>
+      <i class="building outline large icon" style="margin-bottom: 10px"></i>
     <% } else { %>
-        <a href="/profile/<%= user._id %>"><%= item.author.username %></a>
+      <i class="ticket large icon" style="margin-bottom: 10px"></i>
     <% } %>
-</p>
-
-
-<% if(currentUser && item.author.id.equals(currentUser._id)){ %>
-    <a class="btn btn-xs btn-warning" href="/items/<%= item._id %>/edit">Edit</a>
-    <form id="delete-form" action="/items/<%= item._id %>?_method=DELETE" method="POST">
-        <button class="btn btn-xs btn-danger">Delete</button>
-    </form>
-<% } %>
-
-<p>
+  </div>
+    
+  <!--name-->
+  <h2 style="display:inline"><%= item.name %></h2>
+  
+  <!--price-->
+  <% if(item.category == "Sale" || item.category == "Housing") { %>
+    <div style="display:inline; margin-left: 25px" class="ui orange tag large label">$ <%= item.price %></div>
+  <% } %>
+  
+  <!--author-->
+  <div style="margin-top: 10px">
+    <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+      <a class="ui large label" href="/myprofile/<%= user._id %>">
+        <i class="user teal icon"></i><%= item.author.username %>
+      </a>
+    <% } else { %>
+      <a class="ui large label" href="/profile/<%= user._id %>">
+        <i class="user teal icon"></i><%= item.author.username %>
+      </a>
+      <% if(user.items.length > 1) { %>
+        <a class="ui left pointing teal basic label" href="/profile/<%= user._id %>">
+          See all <%=user.items.length%> items this user owns
+        </a>
+      <% } %>
+    <% } %>
+  </div>
+  
+  <!--favorite-->
+  <div style="display:inline; float: right; margin-top: 10px">
     <% var flag = false; %>
     <% if(currentUser) { %>
-        <% currentUser.favorites.forEach(function(favoriteItem){ %>
-            <% if(favoriteItem.equals(item._id)) { flag = true; } %>
-        <% } ); %>
+      <% currentUser.favorites.forEach(function(favoriteItem){ %>
+        <% if(favoriteItem.equals(item._id)) { flag = true; } %>
+      <% } ); %>
     <% } %>
     <% if(currentUser && flag) { %>
-        <p>FAVORITES
-            <a href="/items/<%= item._id %>/favorite-off"><span class="glyphicon glyphicon-star"></span></a>
-        </p>
+      Remove From Favorite
+      <a href="/items/<%= item._id %>/favorite-off"><i class="star big icon"></i></a>
     <% } else { %>
-        <p>FAVORITES
-            <a href="/items/<%= item._id %>/favorite-on"><span class="glyphicon glyphicon-star-empty"></span></a>
-        </p>
+      Add To Favorite
+      <a href="/items/<%= item._id %>/favorite-on"><i class="empty star big icon"></i></a>
     <% } %>
-</p>
+  </div>
+  
+  <!--date_crt-->
+  <div class="detail" style="font-size: 14px; color: grey; margin-top: 15px">
+    Created On: 
+    <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
+    <%= month[item.date_crt.getMonth()] %> - <%= item.date_crt.getDate() %> - <%= item.date_crt.getFullYear() %>
+  </div>
+  
+  <!--image-->
+  <div style="margin-top: 50px">
+    <h4 class="ui horizontal divider header">
+      <i class="image icon"></i>
+      Images
+    </h4>
+    <p style="text-align: center; color: grey">Click to see full images</p>
+    <div style="margin-left: 25px">
+      <section>
+        <div class="ui link cards">
+        <% item.imgs.urls.forEach(function(url){ %>
+          <% if(url != "") {%>
+            <div class="ui card" style="width: 270px; height: 270px; position: relative;">
+              <a class="example-image-link" href="<%= url %>" data-lightbox="example-set">
+                <img class="example-image ui rounded image" id="img" src="<%= url %>" alt=""/>
+              </a>
+            </div>
+          <% } %>
+        <% }); %>
+        </div>
+      </section>
+    </div>
+  </div>
+  
+  <!--Details-->
+  <div style="margin-top: 50px">
+    <h4 class="ui horizontal divider header">
+      <i class="bar chart icon"></i>
+      Details
+    </h4>
+    <table class="ui definition table">
+      <tbody>
+        <!--wechat-->
+        <% if(item.wechat != null && item.wechat != "") { %>
+          <tr>
+            <td>Contact Wechat</td>
+            <td>
+              <div class="ui action input">
+                <input id="foo" type="text" value="<%= item.wechat %>" size="25">
+                <button id="btn" class="ui right teal labeled icon button" data-clipboard-target="#foo">
+                  <i class="copy icon"></i>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% } %>
+        <!--wechat paste-->
+        <% if(item.wechat != null && item.wechat != "") { %>
+          <tr>
+            <td>Paste to Wechat</td>
+            <td>
+              <div class="ui action input">
+                <div class="field">
+                  <textarea id="bar" rows="4" cols="27" style="height: 60px; margin: 0">你好，我在 HereInPittsburgh 上面看到了你发布的信息“<%= item.name %>”，可以加个微信吗？谢谢。
+                  </textarea>
+                </div>
+                <button id="btn1" class="ui right teal labeled icon button" data-clipboard-target="#bar" style="height: 60px">
+                  <i class="copy icon"></i>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% } %>
+        <!--date_av-->
+        <tr>
+          <td class="two wide column">Dates Available</td>
+          <td><%= item.date_av[0] %> - <%= item.date_av[1] %></td>
+        </tr>
+        <!--descreption-->
+        <tr>
+          <td>Description</td>
+          <td><%= item.descreption %></td>
+        </tr>
+        <!--delivery-->
+        <% if(item.category == "Sale") { %>
+          <tr>
+            <td>Delivery</td>
+            <td><%= item.delivery %></td>
+          </tr>
+        <% } %>
+        <!--orgUrl-->
+        <% if(item.orgUrl != null && item.orgUrl != "") { %>
+          <tr>
+            <td>Reference URL</td>
+            <td><a href="<%= item.orgUrl %>" target="_blank"><%= item.orgUrl %></a></td>
+          </tr>
+        <% } %>
+        <!--address-->
+        <% if(item.address.place_id != null && item.address.place_id != "") { %>
+          <% if(item.category == "Sale") { %>
+            <% include maps/map_show_circle%>
+          <% } else { %>
+            <% include maps/map_show_marker%>
+          <% } %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <!--comments-->
+  <div style="margin-top: 50px">
+    <% include comments %>
+  </div>
+  
+  <!--edit-->
+  <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+    <div style="width: 200px; margin: 30px auto">
+      <a class="ui orange button" href="/items/<%= item._id %>/edit" style="width: 200px">Edit This Item</a>
+    </div>
+  <% } %>
+  
+</div>
+<!--show the item above-->
+<% } %>
 
 
-<p>
-    <a class="btn btn-warning" href="/items/<%= item._id %>/comments/new">Add New Comment</a>
-</p>
 
-<% item.comments.forEach(function(comment){ %>
-    <p><%= comment.author.username %> - <%= comment.text %></p>
-<% }); %>
 
-<div id="map"></div>
+<% if(item.isEnd == true) { %>
+<!--hide the information below-->
+<div style="max-width: 600px; margin: 30px auto;">
+  
+  <!--category-->
+  <div style="display:inline;">
+    <% if(item.category == "Sale") { %>
+      <i class="shop large icon" style="margin-bottom: 10px"></i>
+    <% }else if(item.category == "Housing") {%>
+      <i class="building outline large icon" style="margin-bottom: 10px"></i>
+    <% } else { %>
+      <i class="ticket large icon" style="margin-bottom: 10px"></i>
+    <% } %>
+  </div>
+  <!--name-->
+  <h2 style="display:inline"><%= item.name %></h2>
+  <!--price-->
+  <% if(item.category == "Sale" || item.category == "Housing") { %>
+    <div style="display:inline; margin-left: 25px" class="ui grey tag label">$ <%= item.price %></div>
+  <% } %>
+  <!--is end-->
+  <div class="ui large red left pointing label" style="margin-top: 10px">
+    This item has been sold
+  </div>
+  <!--author-->
+  <div style="margin-top: 10px">
+    <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+      <a class="ui large label" href="/myprofile/<%= user._id %>">
+        <i class="user teal icon"></i><%= item.author.username %>
+      </a>
+    <% } else { %>
+      <a class="ui large label" href="/profile/<%= user._id %>">
+        <i class="user teal icon"></i><%= item.author.username %>
+      </a>
+      <% if(user.items.length > 1) { %>
+        <a class="ui left pointing teal basic label" href="/profile/<%= user._id %>">
+          See all <%=user.items.length%> items this user owns
+        </a>
+      <% } %>
+    <% } %>
+  </div>
+  <!--favorite-->
+  <div style="display:inline; float: right; margin-top: 10px">
+    <% var flag = false; %>
+    <% if(currentUser) { %>
+      <% currentUser.favorites.forEach(function(favoriteItem){ %>
+        <% if(favoriteItem.equals(item._id)) { flag = true; } %>
+      <% } ); %>
+    <% } %>
+    <% if(currentUser && flag) { %>
+      Remove From Favorite
+      <a href="/items/<%= item._id %>/favorite-off"><i class="star big icon"></i></a>
+    <% } else { %>
+      Add To Favorite
+      <a href="/items/<%= item._id %>/favorite-on"><i class="empty star big icon"></i></a>
+    <% } %>
+  </div>
+  <!--date_crt-->
+  <div class="detail" style="font-size: 14px; color: grey; margin-top: 15px">
+    Created On: 
+    <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
+    <%= month[item.date_crt.getMonth()] %> - <%= item.date_crt.getDate() %> - <%= item.date_crt.getFullYear() %>
+  </div>
+  
+  <!--image-->
+  <div style="margin-top: 50px">
+    <h4 class="ui horizontal divider header">
+      <i class="image icon"></i>
+      Images
+    </h4>
+    <p style="text-align: center; color: grey">Click to see full images</p>
+    <div style="margin-left: 25px">
+      <section>
+        <div class="ui link cards">
+        <% item.imgs.urls.forEach(function(url){ %>
+          <% if(url != "") {%>
+            <div class="ui card" style="width: 270px; height: 270px; position: relative;">
+              <a class="example-image-link" href="<%= url %>" data-lightbox="example-set">
+                <img class="example-image ui rounded image" id="img" src="<%= url %>" alt=""/>
+              </a>
+            </div>
+          <% } %>
+        <% }); %>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!--Delete-->
+  <div style="margin-top: 30px">
+    <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
+        <form id="delete-form" action="/items/<%= item._id %>?_method=DELETE" method="POST">
+            <div style="width: 200px; margin: 30px auto">
+              <button class="ui red button" style="width: 200px">Delete</button>
+              <p style="text-align: center">this operation is irreversible!!!</p>
+            </div>
+        </form>
+    <% } %>
+  </div>
+  
+</div>
+<!--hide the information above-->
+<% } %>
+
 
 <% include ../partials/footer %>
 
+
 <style>
-  #map {
-    height: 400px;
-    width: 800px;
-   }
+  #img {
+    max-height: 270px;  
+    max-width: 270px;
+    position: absolute;  
+    top: 0;  
+    bottom: 0;  
+    left: 0;  
+    right: 0;  
+    margin: auto;
+    border-radius: 0px !important;
+  }
 </style>
 
 <script>
-  function initMap() {
-    //var pittsburgh = {lat: 40.445, lng: -79.95};
-    var map = new google.maps.Map(document.getElementById('map'), {});
-    var geocoder = new google.maps.Geocoder;
-    var place_id = '<%= item.address.place_id %>';
-    geocoder.geocode({'placeId': place_id}, function(results, status) {
-      if (status === 'OK') {
-        if (results[0]) {
-          map.setZoom(15);
-          map.setCenter(results[0].geometry.location);
-          var circle = new google.maps.Circle({
-              strokeWeight: 0,
-              fillColor: '#FF0000',
-              fillOpacity: 0.35,
-              map: map,
-              center: results[0].geometry.location,
-              radius: 100
-          });
-        } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&callback=initMap">
+  // wechat paste
+  var btn = document.getElementById('btn');
+  var btn1 = document.getElementById('btn1');
+  var clipboard = new Clipboard(btn);
+  var clipboard = new Clipboard(btn1);
+  clipboard.on('success', function(e) {
+    console.log(e);
+  });
+  clipboard.on('error', function(e) {
+    console.log(e);
+  });
 </script>

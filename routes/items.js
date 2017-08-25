@@ -16,7 +16,14 @@ var multer          = require('multer'),
     fs              = require('fs'),
     urlExists       = require('url-exists');
 const del           = require('del');
-var upload          = multer({ dest: 'tmpImages/' });
+var upload          = multer({ 
+                        dest: 'tmpImages/', 
+                        limits: { fileSize: 50000000 }, //max: 50mb
+                        onError : function(err, next) {
+                                      console.log('error', err);
+                                      next(err);
+                                    }
+                        });
     
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -33,7 +40,6 @@ var client = s3.createClient({
   }
 });
 
-
 //ITEMS INDEX PAGE
 router.get("/items", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
@@ -42,37 +48,19 @@ router.get("/items", function(req, res){
         if(err) {
             console.log(err);
         } else {
-            res.render("items/index", {items: items});
+            res.render("items/index", {items: items, category: ""});
         }
     });
 });
 
 //CATEGORY (has to be placed ahead)
-//furniture page
-router.get("/items/category=furniture", function(req, res){
+//sale page
+router.get("/items/category=sale", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
     //console.log(req.session);
-    Item.find({category: "Furniture"}).sort({date_update: -1}).exec(function(err, items) {
+    Item.find({category: "Sale"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
-        else res.render("items/index", {items: items});
-    });
-});
-//appliances page
-router.get("/items/category=appliances", function(req, res){
-    req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
-    Item.find({category: "Appliances"}).sort({date_update: -1}).exec(function(err, items) {
-        if(err) throw err;
-        else res.render("items/index", {items: items});
-    });
-});
-//books page
-router.get("/items/category=books", function(req, res){
-    req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
-    Item.find({category: "Books"}).sort({date_update: -1}).exec(function(err, items) {
-        if(err) throw err;
-        else res.render("items/index", {items: items});
+        else res.render("items/index", {items: items, category: "On Sale"});
     });
 });
 //housing page
@@ -81,7 +69,7 @@ router.get("/items/category=housing", function(req, res){
     //console.log(req.session);
     Item.find({category: "Housing"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
-        else res.render("items/index", {items: items});
+        else res.render("items/index", {items: items, category: "Housing"});
     });
 });
 //events page
@@ -90,7 +78,7 @@ router.get("/items/category=events", function(req, res){
     //console.log(req.session);
     Item.find({category: "Events"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
-        else res.render("items/index", {items: items});
+        else res.render("items/index", {items: items, category: "Events"});
     });
 });
 
@@ -105,30 +93,46 @@ router.get("/items/search", function(req, res) {
         if(err) {
             console.log(err);
         } else {
-            res.render("items/index", {items: items});
+            res.render("items/search", {items: items, query: query});
         }
     });
 });
 
-//NEW ITEM & UPLOADING
-router.get("/items/new", middleware.isLoggedIn, function(req, res){
-    res.render("items/new", {imgs: "not exist", uploadDone: false});
+//NEW ITEM
+router.get("/items/new_sale", middleware.isLoggedIn, function(req, res){
+    req.session.catename = "Sale"; //RECORD THE catename
+    // req.flash("success", "Please upload imges first.");
+    res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Sale"});
 });
+router.get("/items/new_housing", middleware.isLoggedIn, function(req, res){
+    req.session.catename = "Housing"; //RECORD THE catename
+    // req.flash("success", "Please upload imges first.");
+    res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Housing"});
+});
+router.get("/items/new_events", middleware.isLoggedIn, function(req, res){
+    req.session.catename = "Events"; //RECORD THE catename
+    // req.flash("success", "Please upload imges first.");
+    res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Events"});
+});
+//NEW UPLOADING
 router.get("/items/new/add_imgs/:id", middleware.isLoggedIn, function(req, res){
     req.session.imgsId = req.params.id; //RECORD THE imgsId
     Imgs.findById(req.params.id, function(err, imgs){
-        
-        if(err) {console.log(err);}
+        if(err) throw err;
         else {
-            res.render("items/new", {imgs: imgs, uploadDone: false});
+            if(req.session.catename == "Sale") res.render("items/new", {imgs: imgs, uploadDone: false, catename: "Sale"});
+            if(req.session.catename == "Housing") res.render("items/new", {imgs: imgs, uploadDone: false, catename: "Housing"});
+            if(req.session.catename == "Events") res.render("items/new", {imgs: imgs, uploadDone: false, catename: "Events"});
         }
     });
 });
 router.get("/items/new/imgs_added", middleware.isLoggedIn, function(req, res) {
     Imgs.findById(req.session.imgsId, function(err, imgs){
-        if(err) {console.log(err);}
+        if(err) throw err;
         else {
-            res.render("items/new", {imgs: imgs, uploadDone: true});
+            if(req.session.catename == "Sale") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Sale"});
+            if(req.session.catename == "Housing") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Housing"});
+            if(req.session.catename == "Events") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Events"});
         }
     });
 });
@@ -136,6 +140,12 @@ router.get("/items/new/imgs_added", middleware.isLoggedIn, function(req, res) {
 router.post('/items/new/add_imgs', upload.array('uploadedImages', 10), function (req, res, next) {
     // req.flash("success", "please be patient");
     var files = req.files;
+    // upload.onError = function(err, next) {
+    //                       console.log('error', err);
+    //                     //   next(err);
+    //                       req.flash("error", err);
+    //                       return res.redirect("back");
+    //                     }
     var newImgs = {count: 0, urls: []};
     Imgs.create(newImgs, function(err, imgs){
         if(err) {console.log(err)}
@@ -146,6 +156,10 @@ router.post('/items/new/add_imgs', upload.array('uploadedImages', 10), function 
 });
 router.post('/items/new/add_imgs/:id', upload.array('uploadedImages', 10), function (req, res, next) {
     var files = req.files;
+    // if (err) {
+    //     req.flash("error", err.message);
+    //     return res.redirect('/items');
+    // }
     Imgs.findById(req.params.id, function(err, imgs){
         if(err) {console.log(err)}
         else {
@@ -155,14 +169,18 @@ router.post('/items/new/add_imgs/:id', upload.array('uploadedImages', 10), funct
 });
 var editImgs = function(files, imgs, res, req) {
     "use strict"
-    var countStart = imgs.count + 1;
-    var countEnd = imgs.count + files.length;
+    var countStart = imgs.urls.length + 1;
+    var countEnd = imgs.urls.length + files.length;
+    if(countEnd > 9) {
+        req.flash("error", "Sorry, you cannot upload images more than 9 times. Please start again");
+        return res.redirect("back");
+    }
     var s3Path = [];
     var resizedLocalPath = [];
     //set up the imgs
     for(var i=countStart; i<=countEnd; i++) {
-        s3Path[i] = imgs.id + "" + i + ".jpg";
-        resizedLocalPath[i] = "tmpImages/" + s3Path[i];
+        s3Path[i] = "imgs/" + imgs.id + "/" + imgs.id + "" + i + ".jpg";
+        resizedLocalPath[i] = "tmpImages/" + imgs.id + "" + i + ".jpg";
         imgs.urls.push("https://s3.amazonaws.com/hereinpittsburgh/" + s3Path[i]);
     }
     //resize 
@@ -170,10 +188,16 @@ var editImgs = function(files, imgs, res, req) {
         imgs.count = imgs.count + 1;
         im.resize({
             srcPath: files[i].path,
-            dstPath: resizedLocalPath[imgs.count],
+            dstPath: resizedLocalPath[countStart + i],
             width: 1000,
             height: 1000
-            }, function(err, stdout, stderr){if (err) throw err;});;
+            }, function(err, stdout, stderr){
+                // if (err) throw err;
+                if(err) {
+                    req.flash("error", err.message);
+                    return res.redirect("/items");
+                }
+            });
     }
     imgs.save();
     //wait until all the resizing are done
@@ -215,9 +239,9 @@ var editImgs = function(files, imgs, res, req) {
         }
     }, 100);
 }
-router.get("/items/new/remove_imgs/:urlName", middleware.isLoggedIn, function(req, res){
-    var imgsId = req.params.urlName.slice(0, -1);
-    var urlIndex = req.params.urlName.slice(-1) - 1;
+router.get("/items/new/remove_imgs/:imgName", middleware.isLoggedIn, function(req, res){
+    var imgsId = req.params.imgName.slice(0, -1);
+    var urlIndex = req.params.imgName.slice(-1) - 1;
     Imgs.findById(imgsId, function(err, imgs) {
         if(err) throw err;
         else{
@@ -237,14 +261,6 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
     var name = req.body.name;
     var wechat = req.body.wechat;
     var category = req.body.category;
-    var type;
-    switch (category) {
-        case 'Furniture': type = "sale"; break;
-        case 'Appliances': type = "sale"; break;
-        case 'Books': type = "sale"; break;
-        case 'Housing': type = "housing"; break;
-        case 'Events': type = "events"; break;
-    }
     var descreption = req.body.descreption;
     var date_av = req.body.date_av;
     var isEnd = false;
@@ -260,7 +276,7 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
                 id: req.user._id,
                 username: req.user.personal_name
             }
-            var newItem = new Item({name: name, category: category, type: type, wechat: wechat, author: author, 
+            var newItem = new Item({name: name, category: category, wechat: wechat, author: author, 
                             date_crt: currentTime(), date_update: currentTime(), descreption: descreption,
                             date_av: date_av, isEnd: isEnd, price: price, price_org: price_org, orgUrl: orgUrl,
                             delivery: delivery, address: {name: req.body.address, place_id: req.body.place_id} });
@@ -279,6 +295,7 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
             cate.save();
             req.user.items.push(newItem);
             req.user.save(); 
+            console.log(newItem);
             res.redirect("/items");
         }
     });
@@ -305,14 +322,13 @@ router.get("/items/:id", function(req, res) {
 router.get("/items/:id/favorite-on", middleware.isLoggedIn, function(req, res) {
     req.session.returnTo = req.path.substring(0, -12); //RECORD THE PATH
     //console.log(req.session);
-    var currentUser = req.user;
     var itemID = req.params.id;
     Item.findById(itemID, function(err, favoriteItem) {
         if(err) {console.log(err);}
         else {
-            currentUser.favorites.push(favoriteItem);
-            currentUser.save();
-            //console.log(currentUser);
+            // console.log(favoriteItem);
+            req.user.favorites.push(favoriteItem);
+            req.user.save();
             res.redirect('back');
         }
     });
@@ -321,14 +337,13 @@ router.get("/items/:id/favorite-on", middleware.isLoggedIn, function(req, res) {
 router.get("/items/:id/favorite-off", middleware.isLoggedIn, function(req, res) {
     req.session.returnTo = req.path.substring(0, -13); //RECORD THE PATH
     //console.log(req.session);
-    var currentUser = req.user;
     var itemID = req.params.id;
     Item.findById(itemID, function(err, favoriteItem) {
         if(err) {console.log(err);}
         else {
-            currentUser.favorites.pop(favoriteItem);
-            currentUser.save();
-            //console.log(currentUser);
+            // console.log(favoriteItem);
+            req.user.favorites.pop(favoriteItem);
+            req.user.save();
             res.redirect('back');
         }
     });

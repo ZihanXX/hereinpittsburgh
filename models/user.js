@@ -5,6 +5,7 @@ var UserSchema = new mongoose.Schema({
     personal_name: String,
     username: String, //email actually
     password: String,
+    cur_item_count: Number,
     items: [
         {
             type: mongoose.Schema.Types.ObjectId,

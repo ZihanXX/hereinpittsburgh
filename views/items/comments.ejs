@@ -1,0 +1,48 @@
+<div class="ui comments">
+  <h4 class="ui horizontal divider header">
+    <i class="comments outline icon" style="margin-bottom: 5px"></i>
+    Comments
+  </h4>
+  <!--<h3 class="ui dividing header">Comments</h3>-->
+  <% item.comments.forEach(function(comment){ %>
+    <div class="comment">
+      <div class="content">
+        <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+          <a class="author" href="/myprofile/<%= comment.author.id %>"><%= comment.author.username %></a>
+        <% } else { %>
+          <a class="author" href="/profile/<%= comment.author.id %>"><%= comment.author.username %></a>
+        <% } %>
+        <div class="metadata">
+          <span class="date">
+            <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
+            <%= month[comment.date_update.getMonth()] %> - <%= comment.date_update.getDate() %> - <%= comment.date_update.getFullYear() %>
+          </span>
+        </div>
+        <div class="text">
+          <%= comment.text %>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+  
+  <% if(currentUser) { %>
+    <form class="ui reply form" action="/items/<%= item.id %>/comments" method="POST">
+      <div class="field">
+        <textarea name="comment[text]" rows="2" placeholder="comment"></textarea>
+      </div>
+      <div style="width: 200px; margin: 5px auto">
+        <button class="ui teal labeled submit icon button" style="width: 200px">
+          <i class="icon edit"></i> New Comment
+        </button>
+      </div>
+    </form>
+  <% } else { %>
+    <form class="ui reply form" action="/items/<%= item.id %>/comments" method="POST">
+      <div style="width: 200px; margin: 5px auto">
+        <button class="ui teal labeled submit icon button" style="width: 200px">
+          <i class="icon edit"></i> New Comment
+        </button>
+      </div>
+    </form>
+  <% } %>
+</div>

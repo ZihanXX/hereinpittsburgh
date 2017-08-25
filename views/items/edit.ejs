@@ -1,27 +1,167 @@
 <% include ../partials/header %>
 
-<div class="container">
-    <div class="row">
-        <h1 style="text-align: center;">Edit Item <%= item.name %></h1>
-        <div style="width: 30%; margin: 30px auto;">
-            <form action="/items/<%= item._id %>?_method=PUT" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="item[name]" value="<%= item.name %>">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="item[wechat]" value="<%= item.wechat %>">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-default btn-block">Submit!</button>
-                </div>
-                <a href="/items">Go Back</a>
-            </form>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/76959c6f7d33a527b49be76789e984a0a407350b/dist/calendar.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/76959c6f7d33a527b49be76789e984a0a407350b/dist/calendar.min.js"></script>
+
+<div class="ui container">
+  
+  <!--header-->
+  <div style="margin-top: 50px">
+    <% if(item.category == "Sale") { %>
+      <h2 style="text-align: center">
+      <i class="shop grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Edit: <%= item.name %></h2>
+    <% } else if(item.category == "Housing") { %>
+      <h2 style="text-align: center">
+      <i class="building outline grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Edit: <%= item.name %></h2>
+    <% } else { %>
+      <h2 style="text-align: center">
+      <i class="ticket grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
+      Edit: <%= item.name %></h2>
+    <% } %>
+  </div>
+  
+  <!--item info-->
+  <div style="max-width: 600px; margin: 50px auto;">
+ 
+    <!--form-->
+    <form class="ui form" action="/items/<%= item._id %>?_method=PUT" method="POST">
+      <!--name-->
+      <div class="field">
+        <label>Name</label>
+        <div class="ui corner labeled input">
+          <input type="text" name="item[name]" value="<%= item.name %>" maxlength="18" required>
+          <div class="ui corner label">
+            <i class="asterisk icon"></i>
+          </div>
         </div>
-        
-    </div>
+      </div>
+      <!--price-->
+      <% if(item.category == "Sale" || item.category == "Housing") { %>
+        <div class="field">
+          <label>Price</label>
+          <div class="ui right corner labeled input">
+            <label for="amount" class="ui label">$</label>
+            <input type="text" name="item[price]" value="<%= item.price %>" id="amount" maxlength="10" required>
+            <div class="ui corner label">
+              <i class="asterisk icon"></i>
+            </div>
+          </div>
+        </div>
+      <% } %>
+      <!--category: cannot change-->
+      <!--delivery-->
+      <% if(item.category == "Sale") { %>
+        <div class="field">
+          <label>Delivery (click to choose)</label>
+          <select name="item[delivery]" class="ui simple fluid selection dropdown" id="deli-dropdown">
+              <% if(item.delivery == "no") { %>
+                  <option value="no" selected>No</option>
+                  <option value="yes">Yes</option>
+                  <option value="dependable">Dependable</option>
+              <% } %>
+              <% if(item.delivery == "yes") { %>
+                  <option value="no">No</option>
+                  <option value="yes" selected>Yes</option>
+                  <option value="dependable">Dependable</option>
+              <% } %>
+              <% if(item.delivery == "dependable") { %>
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                  <option value="dependable" selected>Dependable</option>
+              <% } %>
+          </select>
+        </div>
+      <% } %>
+      <!--descreption-->
+      <div class="field">
+        <label>Description</label>
+        <div class="field">
+          <textarea name="item[descreption]" rows="3"><%= item.descreption %></textarea>
+        </div>
+      </div>
+      <!--wechat-->
+      <div class="field">
+        <label>Wechat</label>
+        <div class="ui corner labeled input">
+          <input type="text" name="item[wechat]" value="<%= item.wechat %>">
+          <div class="ui corner label">
+            <i class="asterisk icon"></i>
+          </div>
+        </div>
+      </div>
+      <!--date_av-->
+      <div class="field">
+        <label>Available Dates</label>
+        <div class="two fields">
+          <div class="field">
+            <div class="ui calendar" id="rangestart">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input name="item[date_av][0]" value="<%= item.date_av[0] %>" type="text" placeholder="Start">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui calendar" id="rangeend">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input name="item[date_av][1]" value="<%= item.date_av[1] %>" type="text" placeholder="End">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--orgUrl-->
+      <div class="field">
+        <label>Original URL</label>
+        <input type="text" name="item[orgUrl]" value="<%= item.orgUrl %>" placeholder="orgUrl">
+      </div>
+      <!--map-->
+      <div class="field">
+        <label>Address</label>
+        <div class="field" style="visibility: hidden; height: 0; padding: 0; margin: 0">
+          <input id="place-id" type="text" value="<%= item.address.place_id %>" name="item[address][place_id]">
+        </div>
+        <div class="ui input field">
+          <input id="pac-input" type="text" value="<%= item.address.name %>" name="item[address][name]">
+        </div>
+        <div class="field">
+          <div id="map"></div>
+          <% if(item.category == "Sale") { %>
+            <% include maps/map_circle %>
+          <% } else { %>
+            <% include maps/map_marker %>
+          <% } %>
+        </div>
+      </div>
+      <!--submit-->
+      <div style="width: 210px; margin: 10px auto">
+        <button class="ui teal button" style="width: 210px">Submit!</button>
+      </div>
+    </form>
+    
+    <!--isEnd-->
+    <form class="ui form" action="/items/<%= item._id %>?_method=PUT" method="POST">
+      <div class="ui input field" style="visibility: hidden; height: 0; padding: 0; margin: 0">
+        <input type="text" value="true" name="item[isEnd]">
+      </div>
+      <div style="width: 210px; margin: 5px auto">
+        <% if(item.category == "Sale") { %>
+          <button class="ui red button" style="width: 210px">Sold. Hide my information.</button>
+        <% } else { %>
+          <button class="ui red button" style="width: 210px">End. Hide my information.</button>
+        <% } %>
+        <p style="text-align: center">This operation is irreversible!!!</p>
+      </div>
+    </form>
+    
+  </div>
 </div>
-
-
 
 
 

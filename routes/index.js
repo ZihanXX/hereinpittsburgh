@@ -10,11 +10,17 @@ var passport = require("passport");
 var middleware = require("../middleware");
 
 
-//root route
+//Landing Page
 router.get("/", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
     //console.log(req.session);
-    res.render("landing");
+    Item.find({}).sort({date_update: -1}).exec(function(err, items) {
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("landing", {items: items});
+        }
+    });
 });
 
 //REGISTER SIGNUP
@@ -54,11 +60,11 @@ router.post("/register", function(req, res) {
 
 //MYPROFILE
 router.get("/myprofile/:id", middleware.isLoggedIn, function(req, res){
-    User.findById(req.user._id).populate("items").exec(function(err, user){
+    User.findById(req.user._id).populate("items").populate("favorites").exec(function(err, user){
         if(err) {
             console.log(err);
         } else {
-            res.render("user/myprofile", {items: user.items});
+            res.render("user/myprofile", {user: user, items: user.items, favorites: user.favorites});
         }
     });
 });

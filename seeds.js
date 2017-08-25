@@ -6,9 +6,7 @@ var Item        = require("./models/item"),
     Imgs        = require("./models/imgs")
     
 var catdata = [
-    {name: "Furniture", items: []},
-    {name: "Appliances", items: []},
-    {name: "Books", items: []},
+    {name: "Sale", items: []},
     {name: "Housing", items: []},
     {name: "Events", items: []}
     ]

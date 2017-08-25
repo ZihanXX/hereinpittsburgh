@@ -8,7 +8,7 @@ var Item        = require("../models/item"),
     
 var middleware = require("../middleware");
 
-
+//实际上已经已经不会进入页面了
 //if logged in, run "next()", 也就是后面的function
 //但下面这一段只是隐藏了这个url，如果有人直接access rul，也可以做出更改
 router.get("/items/:id/comments/new", middleware.isLoggedIn, function(req, res) {
@@ -39,7 +39,7 @@ router.post("/items/:id/comments/", middleware.isLoggedIn, function(req, res){
                 }
                 else {
                     comment.author.id = req.user._id;
-                    comment.author.username = req.user.username;
+                    comment.author.username = req.user.personal_name;
                     comment.item = item;
                     comment.date_update = currentTime();
                     comment.save();

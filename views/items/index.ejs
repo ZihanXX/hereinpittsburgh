@@ -1,44 +1,41 @@
 <% include ../partials/header %>
 
-<div class="container">
-    <header class="jumbotron">
-        <div class="container">
-            <h1>This is the Items Page</h1>
-        <p>View our hand-picked items</p>
-        <p>
-            <a class="btn btn-primary btn-lg" href="/items/new">Add New Item</a>
-        </p>
-        </div>
-    </header>
-    
-    <div class="row">
-        <div class="col-lg-12">
-            <h3>Our Most Popular Items</h3>
-        </div>
+
+<!--add new item-->
+<div style="width: 200px; margin: 30px auto">
+  <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
+    <i class="dropdown icon"></i>
+    <span class="text">Add New Item</span>
+    <div class="menu">
+      <a class="item" href="/items/new_sale">On Sale</a>
+      <a class="item" href="/items/new_housing">Housing</a>
+      <a class="item" href="/items/new_events">Events</a>
     </div>
-    
-    <div class="row" style="display:flex; flex-wrap:wrap;">
-        <% items.forEach(function(item){ %>
-        <div class="col-md-3 col-sm-6">
-            <div class="thumbnail">
-                <% for(var i=0; i<item.imgs.urls.length; i++) { %>
-                    <% if(item.imgs.urls[i] != "") { %>
-                        <img src="<%= item.imgs.urls[i] %>">
-                        <% i = item.imgs.urls.length - 1; %>
-                    <% } %>
-                <% } %>
-                <div class="caption">
-                    <h4><%= item.name %></h4>
-                </div>
-                <p>
-                    <a href="/items/<%= item._id %>" class="btn btn-frimary">More Info</a>
-                </p>
-            </div>
-        </div>
-    <% }); %>
-    </div>
-    
+  </div>
 </div>
+
+<!--items-->
+<div style="margin-top: 30px">
+  <% if(category != "") { %>
+    <h3 class="ui horizontal divider header">
+      <%= category %>
+    </h3>
+    <% include ../items/items %>
+  <% } else { %>
+    <h3 class="ui horizontal divider header">
+      Items
+    </h3>
+    <% include ../items/items %>
+  <% } %>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    $('.ui.dropdown').dropdown();
+  });
+</script>
+
 
 
 <% include ../partials/footer %>

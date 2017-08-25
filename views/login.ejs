@@ -1,13 +1,34 @@
 <% include partials/header %>
 
-<h1>lOGIN</h1>
 
-<form action="/login" method="post">
-    <input type="email" name="username" placeholder="email">
-    <input type="password" name="password" placeholder="password">
-    <input type="submit" value="login">
-    <a href="/register">New here? Sign Up!</a>
-</form>
+<div class="ui center aligned basic segment" style="width: 300px; margin: 30px auto;">
+    
+    <form class="ui form" action="/login" method="post">
+      <div class="field">
+        <div class="ui left icon input">
+          <input type="email" name="username" placeholder="email" required>
+          <i class="mail icon"></i>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui left icon input">
+          <input type="password" name="password" placeholder="password" required>
+          <i class="lock icon"></i>
+        </div>
+      </div>
+      <input class="ui blue submit button" style="width: 270px" type="submit" value="login">
+    </form>
+  
+  <div class="ui horizontal divider">Or</div>
+  
+  <div class="center aligned column">
+    <a class="ui teal labeled icon button" style="width: 270px" href="/register">
+      <i class="signup icon"></i>
+      Sign Up
+    </a>
+  </div>
+  
+</div>
 
 
 <% include partials/footer %>

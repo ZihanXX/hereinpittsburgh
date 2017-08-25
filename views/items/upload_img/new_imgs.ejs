@@ -1,9 +1,14 @@
-<div style="float: center">
-<form action="/items/new/add_imgs" method="post" enctype="multipart/form-data">
-  <input type="file" name="uploadedImages" value="UPLOAD" multiple>
-  <input type="submit" value="ADDNEW">
+
+<form class="ui form" action="/items/new/add_imgs" method="post" enctype="multipart/form-data">
+  <div class="two fields">
+    <div class="field">
+      <input type="file" name="uploadedImages" value="UPLOAD" multiple>
+    </div>
+    <div class="field">
+      <input type="submit" value="Add Images" class="ui teal button">
+    </div>
+  </div>
 </form>
-</div>
 
 
 

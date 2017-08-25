@@ -1,0 +1,91 @@
+<div class="ui row" style="margin-top: 20px">
+  
+  <div class="ui link cards">
+    <% items.forEach(function(item){ %>
+      <div class="card" style="margin: 17px 17px; width: 250px">
+        <div class="thumbnail">
+          <a class="ui image" href="/items/<%= item._id %>">
+            <% for(var i=0; i<item.imgs.urls.length; i++) { %>
+              <% if(item.imgs.urls[i] != "") { %>
+                  <img src="<%= item.imgs.urls[i] %>">
+                <% i = item.imgs.urls.length - 1; %>
+              <% } %>
+            <% } %>
+          </a>
+        </div>
+        <div class="content">
+          <a class="header" href="/items/<%= item._id %>"><%= item.name %></a>
+          <div class="meta" style="margin-top: 5px">
+            <%= item.category %>
+          </div>
+        </div>
+        <div class="extra content">
+          <span class="right floated">
+            <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
+            <%= month[item.date_crt.getMonth()] %> - <%= item.date_crt.getDate() %> - <%= item.date_crt.getFullYear() %>
+          </span>
+          <span>
+            <i class="user icon"></i>
+            <%= item.author.username %>
+          </span>
+        </div>
+        <% if(item.isEnd) { %>
+          <div class="ui red right corner label"><div style="margin-top: 5px; margin-left: 14px">END</div></div>
+        <% } %>
+      </div>
+    <% }); %>
+  </div>
+    
+</div>
+
+<style>
+
+.thumbnail a {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+}
+.thumbnail a img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+.thumbnail a img portrait {
+  width: 100%;
+  height: auto;
+}
+
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) { 
+
+  var addImageOrientationClass = function(img) {
+    if(img.naturalHeight > img.naturalWidth) {
+      img.classList.add("portrait");
+    }
+  }
+
+  // Add "portrait" class to thumbnail images that are portrait orientation
+  var images = document.querySelectorAll(".thumbnail img");
+  for(var i=0; i<images.length; i++) {
+    if(images[i].complete) {
+      addImageOrientationClass(images[i]);
+    } else {
+      images[i].addEventListener("load", function(evt) {
+        addImageOrientationClass(evt.target);
+      });
+    }
+  }
+
+});
+</script>
+
+
+
