@@ -1,13 +1,34 @@
 <% include ../partials/header %>
 
-<div style="padding-top: 10px"></div>
+    <!--flash-->
+    <div class="ui container" style="margin-top: 20px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+    </div>
 
-<!--items-->
-<div style="margin-top: 30px">
-    <h3 class="ui horizontal divider header">
-      This is the results for: <%= query %>
-    </h3>
-    <% include ../items/items %>
+<div style="padding-top: 20px"></div>
+
+<div class="ui container">
+  <!--items-->
+  <div style="margin: 30px auto">
+      <h3 class="ui horizontal divider header">
+        <i style="margin-bottom: 10px" class="search icon"></i>
+        This is the results for: <%= query %>
+      </h3>
+      <% include ../items/items %>
+  </div>
 </div>
 
 

@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 
-//set up schema
 var itemsSchema = new mongoose.Schema({
     name: String,
     wechat: String,

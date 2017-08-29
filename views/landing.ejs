@@ -1,5 +1,29 @@
 <% include partials/header %>
 
+
+<div class="ui grid">
+  
+  <div class="computer tablet only row" style="position: relative">
+    <img style="width: 100%" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/homepage.jpg"></img>
+    <div style="position: absolute; width: 50%; margin-left: 25%; margin-top: 200px; text-align: center; text-shadow: 2px 2px 4px #000000">
+      <img style="width: 400px" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/hip_trans_logo.png"></img>
+      <h3 style="color: white">A Craglist for Chinese folks in Pittsburgh.</h3>
+      <h3 style="color: white">告别繁杂低效的微信群, 匹兹堡华人自己的Craglist.</h3>
+    </div>
+  </div>
+  
+  <div class="mobile only row">
+    <img style="width: 100%" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/homepage_mobile.jpg"></img>
+    <div style="position: absolute; width: 50%; margin-left: 25%; margin-top: 150px; text-align: center; text-shadow: 2px 2px 4px #000000">
+      <img style="width: 250px" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/hip_trans_logo.png"></img>
+      <h4 style="color: white">A Craglist for Chinese folks in Pittsburgh.</h4>
+      <h4 style="color: white">告别繁杂低效的微信群, 匹兹堡华人自己的Craglist.</h4>
+    </div>
+  </div>
+  
+</div>
+
+
 <div style="padding-top: 10px"></div>
 
 
@@ -9,11 +33,11 @@
   <div style="width: 200px; margin: 30px auto">
     <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
       <i class="dropdown icon"></i>
-      <span class="text">Add New Item</span>
+      <span class="text">Add New Post</span>
       <div class="menu">
-        <a class="item" href="/items/new_sale">On Sale</a>
-        <a class="item" href="/items/new_housing">Housing</a>
-        <a class="item" href="/items/new_events">Events</a>
+        <a class="item" href="/items/new_sale">On Sale - <span style="color: grey">二手家具/电器等</span></a>
+        <a class="item" href="/items/new_housing">Housing - <span style="color: grey">转租/求租房屋</span></a>
+        <a class="item" href="/items/new_events">Events - <span style="color: grey">发布活动/广告</span></a>
       </div>
     </div>
   </div>
@@ -21,8 +45,9 @@
   <!--items-->
   <div style="margin-top: 30px">
     <h3 class="ui horizontal divider header">
-      Items
+      All Posts
     </h3>
+    <p style="text-align: center; color: grey">二手家具电器/房屋转租/活动发布. PLEASE FIND ALL POSTS HERE.</p>
     <% include items/items %>
   </div>
 

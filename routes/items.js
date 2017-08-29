@@ -8,42 +8,43 @@ var Item        = require("../models/item"),
     User        = require("../models/user"),
     Category    = require("../models/category"),
     Imgs        = require("../models/imgs");
-
-//UPLOADING
-var multer          = require('multer'),
-    im              = require('imagemagick'),
-    s3              = require('s3'),
-    fs              = require('fs'),
-    urlExists       = require('url-exists');
-const del           = require('del');
-var upload          = multer({ 
-                        dest: 'tmpImages/', 
-                        limits: { fileSize: 50000000 }, //max: 50mb
-                        onError : function(err, next) {
-                                      console.log('error', err);
-                                      next(err);
-                                    }
-                        });
     
 router.use(bodyParser.urlencoded({extended: true}));
 
-//SET UP UPLOADING
+
+//UPLOADING VARS
+var multer  = require('multer'),
+    im      = require('imagemagick'),
+    s3      = require('s3'),
+    fs      = require('fs');
+const del   = require('del');
+//multer upload
+var upload  = multer({ 
+    dest: 'tmpImages/', 
+    limits: { fileSize: 10000000 }, //max: 10mb
+    onError :
+        function(err, next) {
+            console.log('error', err);
+            next(err);
+        }
+    });
+//s3 upload
 var client = s3.createClient({
-  maxAsyncS3: 20,     // this is the default 
-  s3RetryCount: 3,    // this is the default 
-  s3RetryDelay: 1000, // this is the default 
-  multipartUploadThreshold: 20971520, // this is the default (20 MB) 
-  multipartUploadSize: 15728640, // this is the default (15 MB) 
-  s3Options: {
-    accessKeyId: "AKIAIM3J5R5I3GSMUGWQ",
-    secretAccessKey: "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"
-  }
+    maxAsyncS3: 20,     // this is the default 
+    s3RetryCount: 3,    // this is the default 
+    s3RetryDelay: 1000, // this is the default 
+    multipartUploadThreshold: 20971520, // this is the default (20 MB) 
+    multipartUploadSize: 15728640, // this is the default (15 MB) 
+    s3Options: {
+        accessKeyId: process.env.S3_KEY,
+        secretAccessKey: process.env.S3_PASS
+    }
 });
+
 
 //ITEMS INDEX PAGE
 router.get("/items", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
     Item.find({}).sort({date_update: -1}).exec(function(err, items) {
         if(err) {
             console.log(err);
@@ -53,11 +54,11 @@ router.get("/items", function(req, res){
     });
 });
 
+
 //CATEGORY (has to be placed ahead)
 //sale page
 router.get("/items/category=sale", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
     Item.find({category: "Sale"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
         else res.render("items/index", {items: items, category: "On Sale"});
@@ -66,7 +67,6 @@ router.get("/items/category=sale", function(req, res){
 //housing page
 router.get("/items/category=housing", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
     Item.find({category: "Housing"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
         else res.render("items/index", {items: items, category: "Housing"});
@@ -75,7 +75,6 @@ router.get("/items/category=housing", function(req, res){
 //events page
 router.get("/items/category=events", function(req, res){
     req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
     Item.find({category: "Events"}).sort({date_update: -1}).exec(function(err, items) {
         if(err) throw err;
         else res.render("items/index", {items: items, category: "Events"});
@@ -83,12 +82,10 @@ router.get("/items/category=events", function(req, res){
 });
 
 
-
 //SEARCH
 router.get("/items/search", function(req, res) {
     var query = req.query.q;
     req.session.returnTo = req.path + "?q=" + query; //RECORD THE PATH
-    //console.log(req.session);
     Item.find({"name":{$regex : ".*" + query +".*", $options: '-i'}}, function(err, items){
         if(err) {
             console.log(err);
@@ -98,23 +95,45 @@ router.get("/items/search", function(req, res) {
     });
 });
 
+
 //NEW ITEM
 router.get("/items/new_sale", middleware.isLoggedIn, function(req, res){
     req.session.catename = "Sale"; //RECORD THE catename
-    // req.flash("success", "Please upload imges first.");
     res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Sale"});
 });
 router.get("/items/new_housing", middleware.isLoggedIn, function(req, res){
     req.session.catename = "Housing"; //RECORD THE catename
-    // req.flash("success", "Please upload imges first.");
     res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Housing"});
 });
 router.get("/items/new_events", middleware.isLoggedIn, function(req, res){
     req.session.catename = "Events"; //RECORD THE catename
-    // req.flash("success", "Please upload imges first.");
     res.render("items/new", {imgs: "not exist", uploadDone: false, catename: "Events"});
 });
+
 //NEW UPLOADING
+//first time adding images
+router.get("/items/new/imgs_added", middleware.isLoggedIn, function(req, res) {
+    Imgs.findById(req.session.imgsId, function(err, imgs){
+        if(err) throw err;
+        else {
+            if(req.session.catename == "Sale") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Sale"});
+            if(req.session.catename == "Housing") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Housing"});
+            if(req.session.catename == "Events") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Events"});
+        }
+    });
+});
+//create a new imgs
+router.post('/items/new/add_imgs', upload.array('uploadedImages', 10), function (req, res, next) {
+    var files = req.files;
+    var newImgs = {count: 0, urls: []};
+    Imgs.create(newImgs, function(err, imgs){
+        if(err) {console.log(err)}
+        else {
+            editImgs(files, imgs, res, req);
+        }
+    });
+});
+//continue adding images or done uploading
 router.get("/items/new/add_imgs/:id", middleware.isLoggedIn, function(req, res){
     req.session.imgsId = req.params.id; //RECORD THE imgsId
     Imgs.findById(req.params.id, function(err, imgs){
@@ -126,40 +145,9 @@ router.get("/items/new/add_imgs/:id", middleware.isLoggedIn, function(req, res){
         }
     });
 });
-router.get("/items/new/imgs_added", middleware.isLoggedIn, function(req, res) {
-    Imgs.findById(req.session.imgsId, function(err, imgs){
-        if(err) throw err;
-        else {
-            if(req.session.catename == "Sale") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Sale"});
-            if(req.session.catename == "Housing") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Housing"});
-            if(req.session.catename == "Events") res.render("items/new", {imgs: imgs, uploadDone: true, catename: "Events"});
-        }
-    });
-});
-//UPLOADING POST
-router.post('/items/new/add_imgs', upload.array('uploadedImages', 10), function (req, res, next) {
-    // req.flash("success", "please be patient");
-    var files = req.files;
-    // upload.onError = function(err, next) {
-    //                       console.log('error', err);
-    //                     //   next(err);
-    //                       req.flash("error", err);
-    //                       return res.redirect("back");
-    //                     }
-    var newImgs = {count: 0, urls: []};
-    Imgs.create(newImgs, function(err, imgs){
-        if(err) {console.log(err)}
-        else {
-            editImgs(files, imgs, res, req);
-        }
-    });
-});
+//adding images to this imgs or done uploading
 router.post('/items/new/add_imgs/:id', upload.array('uploadedImages', 10), function (req, res, next) {
     var files = req.files;
-    // if (err) {
-    //     req.flash("error", err.message);
-    //     return res.redirect('/items');
-    // }
     Imgs.findById(req.params.id, function(err, imgs){
         if(err) {console.log(err)}
         else {
@@ -167,37 +155,44 @@ router.post('/items/new/add_imgs/:id', upload.array('uploadedImages', 10), funct
         }
     });
 });
+//files: original img that temporarily saved in "tmpImages"
+//imgs: current imgs
+//countStart/countEnd: the start and end of the urls index
+//s3Path: path of the url in s3
+//resizedLocalPath: the temporary local path for resized images
 var editImgs = function(files, imgs, res, req) {
     "use strict"
-    var countStart = imgs.urls.length + 1;
-    var countEnd = imgs.urls.length + files.length;
-    if(countEnd > 9) {
-        req.flash("error", "Sorry, you cannot upload images more than 9 times. Please start again");
-        return res.redirect("back");
-    }
+    var countStart = imgs.urls.length + 1; //in this round, the start index of urls
+    var countEnd = imgs.urls.length + files.length; //in this round, end index of urls
     var s3Path = [];
     var resizedLocalPath = [];
+    //the limit of img uploading is 10
+    if(countEnd > 9) {
+        req.flash("error", "抱歉，您不能上传图片超过9次，请重新开始.");
+        return res.redirect("back");
+    }
     //set up the imgs
     for(var i=countStart; i<=countEnd; i++) {
         s3Path[i] = "imgs/" + imgs.id + "/" + imgs.id + "" + i + ".jpg";
         resizedLocalPath[i] = "tmpImages/" + imgs.id + "" + i + ".jpg";
         imgs.urls.push("https://s3.amazonaws.com/hereinpittsburgh/" + s3Path[i]);
     }
-    //resize 
-    for(var i=0; i<files.length; i++) {
+    //resize using im
+    for(var j=0; j<files.length; j++) {
         imgs.count = imgs.count + 1;
         im.resize({
-            srcPath: files[i].path,
-            dstPath: resizedLocalPath[countStart + i],
-            width: 1000,
-            height: 1000
-            }, function(err, stdout, stderr){
-                // if (err) throw err;
+                srcPath: files[j].path,
+                dstPath: resizedLocalPath[countStart + j],
+                width: 1000,
+                height: 1000
+            }, 
+            function(err, stdout, stderr){
                 if(err) {
                     req.flash("error", err.message);
                     return res.redirect("/items");
                 }
-            });
+            }
+        );
     }
     imgs.save();
     //wait until all the resizing are done
@@ -239,6 +234,7 @@ var editImgs = function(files, imgs, res, req) {
         }
     }, 100);
 }
+//remove images
 router.get("/items/new/remove_imgs/:imgName", middleware.isLoggedIn, function(req, res){
     var imgsId = req.params.imgName.slice(0, -1);
     var urlIndex = req.params.imgName.slice(-1) - 1;
@@ -248,7 +244,6 @@ router.get("/items/new/remove_imgs/:imgName", middleware.isLoggedIn, function(re
             imgs.urls = imgs.urls.slice(0,urlIndex).concat("").concat(imgs.urls.slice(urlIndex+1, imgs.urls.length));
             imgs.count--;
             imgs.save();
-            // console.log(imgs);
             res.redirect("back");
         }
     });
@@ -288,7 +283,6 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
                     newItem.imgs.imgs_id = imgsId;
                     newItem.imgs.urls = imgs.urls;
                     newItem.save();
-                    // console.log(newItem);
                 }
             });
             cate.items.push(newItem);
@@ -301,15 +295,14 @@ router.post("/items", middleware.isLoggedIn, function(req, res, next){
     });
 });
 
-//SHOW ITEM DETAIL
+
+//SHOW ITEM DETAILS
 router.get("/items/:id", function(req, res) {
     req.session.returnTo = req.path; //RECORD THE PATH
-    //console.log(req.session);
     Item.findById(req.params.id).populate("comments").exec(function(err, foundItem){
         if(err) {
             console.log(err);
         } else {
-            //console.log(foundItem);
             User.findById(foundItem.author.id, function(err, user) {
                 if(err) {console.log(err);}
                 res.render("items/show", {item: foundItem, user: user});
@@ -318,15 +311,14 @@ router.get("/items/:id", function(req, res) {
     });
 });
 
+
 //SET FAVORITE TO BE ON
 router.get("/items/:id/favorite-on", middleware.isLoggedIn, function(req, res) {
     req.session.returnTo = req.path.substring(0, -12); //RECORD THE PATH
-    //console.log(req.session);
     var itemID = req.params.id;
     Item.findById(itemID, function(err, favoriteItem) {
         if(err) {console.log(err);}
         else {
-            // console.log(favoriteItem);
             req.user.favorites.push(favoriteItem);
             req.user.save();
             res.redirect('back');
@@ -336,12 +328,10 @@ router.get("/items/:id/favorite-on", middleware.isLoggedIn, function(req, res) {
 //DELETE FAVOTITE
 router.get("/items/:id/favorite-off", middleware.isLoggedIn, function(req, res) {
     req.session.returnTo = req.path.substring(0, -13); //RECORD THE PATH
-    //console.log(req.session);
     var itemID = req.params.id;
     Item.findById(itemID, function(err, favoriteItem) {
         if(err) {console.log(err);}
         else {
-            // console.log(favoriteItem);
             req.user.favorites.pop(favoriteItem);
             req.user.save();
             res.redirect('back');
@@ -349,53 +339,49 @@ router.get("/items/:id/favorite-off", middleware.isLoggedIn, function(req, res) 
     });
 });
 
-//EDIT ITEM ROUTE
+
+//EDIT ITEM
 router.get("/items/:id/edit", middleware.checkItemOwnerShip, function(req, res){
     Item.findById(req.params.id, function(err, foundItem){
         if(err) {}
         res.render("items/edit", {item: foundItem});
     });
 });
-
-//UPDATE ITEM ROUTE
+//UPDATE ITEM
 router.put("/items/:id", middleware.checkItemOwnerShip, function(req, res) {
-    //find and update the correct item
     Item.findByIdAndUpdate(req.params.id, req.body.item, function(err, updatedItem){
         if(err) {
             res.redirect("/items");
         } else {
             updatedItem.date_update = currentTime();
             updatedItem.save();
-            req.flash("success", "The item has been successfully edited");
+            req.flash("success", "编辑成功. The item has been successfully edited.");
             res.redirect("/items/" + req.params.id);
         }
     });
 });
 
-//DESTROY ITEM ROUTE
+
+
+//DESTROY ITEM
 router.delete("/items/:id", middleware.checkItemOwnerShip, function(req, res){
    Item.findByIdAndRemove(req.params.id, function(err, item){
         if(err){
             res.redirect("/items");
         } else {
-            //console.log(item);
             Category.findOne({name: item.category}, function(err, cate) {
                 if(err) {console.log(err);}
                 else {
-                    //console.log(cate);
                     cate.items.pop(item);
                     cate.save();
-                    //console.log(cate);
                 }
             });
             User.findById(item.author.id, function(err, user) {
                 if(err) {console.log(err);}
                 else {
-                    //console.log(user);
                     user.items.pop(item);
                     user.favorites.pop(item);
                     user.save();
-                    //console.log(user);
                 }
             });
             Comment.find({item: item.id}, function(err, comments){
@@ -410,8 +396,6 @@ router.delete("/items/:id", middleware.checkItemOwnerShip, function(req, res){
         }
    });
 });
-
-
 
 
 //CURRENT DATE

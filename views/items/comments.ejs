@@ -3,7 +3,6 @@
     <i class="comments outline icon" style="margin-bottom: 5px"></i>
     Comments
   </h4>
-  <!--<h3 class="ui dividing header">Comments</h3>-->
   <% item.comments.forEach(function(comment){ %>
     <div class="comment">
       <div class="content">
@@ -28,11 +27,11 @@
   <% if(currentUser) { %>
     <form class="ui reply form" action="/items/<%= item.id %>/comments" method="POST">
       <div class="field">
-        <textarea name="comment[text]" rows="2" placeholder="comment"></textarea>
+        <textarea name="comment[text]" rows="2" placeholder="添加新评论可置顶此post，但很遗憾，创建者并不会收到提示。"></textarea>
       </div>
       <div style="width: 200px; margin: 5px auto">
         <button class="ui teal labeled submit icon button" style="width: 200px">
-          <i class="icon edit"></i> New Comment
+          <i class="icon edit"></i> Comment - 评论
         </button>
       </div>
     </form>
@@ -40,7 +39,7 @@
     <form class="ui reply form" action="/items/<%= item.id %>/comments" method="POST">
       <div style="width: 200px; margin: 5px auto">
         <button class="ui teal labeled submit icon button" style="width: 200px">
-          <i class="icon edit"></i> New Comment
+          <i class="icon edit"></i> Comment - 评论
         </button>
       </div>
     </form>

@@ -1,15 +1,15 @@
-var mongoose = require("mongoose");
+var mongoose    = require("mongoose");
 var Item        = require("./models/item"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
     Category    = require("./models/category"),
-    Imgs        = require("./models/imgs")
+    Imgs        = require("./models/imgs");
     
 var catdata = [
     {name: "Sale", items: []},
     {name: "Housing", items: []},
     {name: "Events", items: []}
-    ]
+    ];
 
 //====CLEAR ALL THE DATA EXCEPT FOR CATES====//
 

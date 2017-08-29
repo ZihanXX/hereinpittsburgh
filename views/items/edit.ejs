@@ -36,7 +36,7 @@
       <div class="field">
         <label>Name</label>
         <div class="ui corner labeled input">
-          <input type="text" name="item[name]" value="<%= item.name %>" maxlength="18" required>
+          <input type="text" name="item[name]" value="<%= item.name %>" maxlength="20" required>
           <div class="ui corner label">
             <i class="asterisk icon"></i>
           </div>
@@ -88,7 +88,7 @@
       </div>
       <!--wechat-->
       <div class="field">
-        <label>Wechat</label>
+        <label>WeChat</label>
         <div class="ui corner labeled input">
           <input type="text" name="item[wechat]" value="<%= item.wechat %>">
           <div class="ui corner label">
@@ -143,7 +143,7 @@
       </div>
       <!--submit-->
       <div style="width: 210px; margin: 10px auto">
-        <button class="ui teal button" style="width: 210px">Submit!</button>
+        <button class="ui teal button" style="width: 210px">Submit - 发布</button>
       </div>
     </form>
     
@@ -158,8 +158,8 @@
         <% } else { %>
           <button class="ui red button" style="width: 210px">End. Hide my information.</button>
         <% } %>
-        <p style="text-align: center">This operation is irreversible!!!</p>
       </div>
+      <p style="text-align: center; color: grey">This operation is irreversible - 此操作不可逆</p>
     </form>
     
   </div>

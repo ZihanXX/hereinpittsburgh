@@ -1,34 +1,55 @@
 <% include partials/header %>
 
-<div class="ui container" style="padding-top: 10px">
+    <!--flash-->
+    <div class="ui container" style="margin-top: 20px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+    </div>
 
-<div class="ui center aligned basic segment" style="width: 300px; margin: 30px auto;">
+
+<div class="ui container" style="padding-top: 10px; height: 60%">
+
+  <div class="ui center aligned basic segment" style="width: 300px; margin: 30px auto;">
+      
+      <form class="ui form" action="/login" method="post">
+        <div class="field">
+          <div class="ui left icon input">
+            <input type="email" name="username" placeholder="邮箱" required>
+            <i class="mail icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <input type="password" name="password" placeholder="密码" required>
+            <i class="lock icon"></i>
+          </div>
+        </div>
+        <input class="ui teal submit button" style="width: 270px" type="submit" value="Login - 登录">
+      </form>
     
-    <form class="ui form" action="/login" method="post">
-      <div class="field">
-        <div class="ui left icon input">
-          <input type="email" name="username" placeholder="email" required>
-          <i class="mail icon"></i>
-        </div>
-      </div>
-      <div class="field">
-        <div class="ui left icon input">
-          <input type="password" name="password" placeholder="password" required>
-          <i class="lock icon"></i>
-        </div>
-      </div>
-      <input class="ui blue submit button" style="width: 270px" type="submit" value="login">
-    </form>
-  
-  <div class="ui horizontal divider">Or</div>
-  
-  <div class="center aligned column">
-    <a class="ui teal labeled icon button" style="width: 270px" href="/register">
-      <i class="signup icon"></i>
-      Sign Up
-    </a>
+    <div class="ui horizontal divider">Or</div>
+    
+    <div class="center aligned column">
+      <a class="ui blue labeled icon button" style="width: 270px" href="/register">
+        <i class="signup icon"></i>
+        Sign Up - 注册
+      </a>
+    </div>
+    
   </div>
-  
+
 </div>
 
 

@@ -22,7 +22,9 @@ var itemRoutes      = require("./routes/items"),
 
 
 app.use(bodyParser.urlencoded({extended: true}));
-mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
+// mongoose.connect("mongodb://localhost/hip", { useMongoClient: true });
+mongoose.connect("mongodb://" + process.env.MONGO_KEY + ":" + process.env.MONGO_PASS + "@ds027509.mlab.com:27509/hereinpittsburgh", { useMongoClient: true });
+
 mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));

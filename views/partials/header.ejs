@@ -3,39 +3,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <head>
         <meta charset="utf-8" />
-        <title>Here In Pittsburgh</title>
+        <link rel="shortcut icon" style="width: 15px" href="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/hapi.png" type="image/png">
+        <title>
+            Here In Pittsburgh
+        </title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.js"></script>
     </head>
+    
+    
+    <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great|Lobster|Lobster+Two|Nova+Round" rel="stylesheet">
     
     <body>
         
     <div class="ui grid">
         <!--big screen header-->
         <div class="computer tablet only row">
-            <div class="ui top fixed secondary pointing menu" style="background-color: white; opacity: 50%;">
+            <div class="ui top fixed secondary pointing menu" style="background-color: black; color: white; opacity: 50%;">
                 <div class="ui container">
-                    <div class="item">
-                        <i class="code icon" style="font-size: 2em"></i>
-                        <a href="/">HereInPittsburgh</a>
+                    <div class="item" style="padding-left: 10px; padding-right: 15px; padding-top: 10px; padding-bottom: 0">
+                        <a href="/"><img style="width: 160px" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/hip_black_logo.jpg"></img></a>
                     </div>
-                    <a class="item" href="/items/category=sale">On Sale</a>
-                    <a class="item" href="/items/category=housing">Housing</a>
-                    <a class="item" href="/items/category=events">Events</a>
+                    <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/items/category=sale"><i class="shop icon"></i>On Sale</a>
+                    <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/items/category=housing"><i class="building outline icon"></i>Housing</a>
+                    <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/items/category=events"><i class="ticket icon"></i>Events</a>
+                    <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/contact_us"><i class="send icon"></i>About Us</a>
                     <div class="right menu">
-                        <div class="item">
-                          <form class="ui transparent icon input" action="/items/search">
-                            <input type="text" placeholder="Search ..." name="q">
-                            <button type="submit" style="border: none; background: none;"><i class="search link icon"></i></button>
+                        <div class="item" style="padding-left: 10px; padding-right: 10px; padding-bottom: 6px">
+                          <form style="margin-bottom: 0" class="ui transparent icon input" action="/items/search">
+                            <input type="text" style="color: white; width: 100px; padding-right: 10px" placeholder="Search ..." name="q">
+                            <button type="submit" style="color: white; border: none; background: none;"><i class="search link icon"></i></button>
                           </form>
                         </div>
                         <% if(!currentUser) { %>
-                            <a class="item" href="/login">Login</a>
-                            <a class="item" href="/register">SignUp</a>
+                            <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/login">Login</a>
+                            <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/register">SignUp</a>
                         <% } else { %>
-                            <a class="item" href="/myprofile/<%= currentUser._id %>"><%= currentUser.personal_name %></a>
-                            <a class="item" href="/logout">Logout</a>
+                            <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/myprofile/<%= currentUser._id %>"><%= currentUser.personal_name %></a>
+                            <a class="item" style="color: white; padding-bottom: 8px; padding-left: 10px; padding-right: 10px" href="/logout">Logout</a>
                         <% } %>
                     </div>
                 </div>
@@ -46,8 +52,7 @@
         <div class="mobile only row">
             <div class="ui fixed inverted navbar menu">
                 <div class="item">
-                    <i class="code icon" style="font-size: 2em"></i>
-                    <a href="/">HereInPittsburgh</a>
+                    <a href="/"><img style="width: 50px" src="https://s3.amazonaws.com/hereinpittsburgh/static_imgs/hip_black.jpg"></img></a>
                 </div>
                 <div class="right menu open">
                     <a href="" class="menu item">
@@ -55,10 +60,11 @@
                     </a>
                 </div>
             </div>
-            <div class="ui fixed vertical navbar menu" style="margin-top: 53px; width: 100%; display: none">
-                <a class="item" href="/items/category=sale" style="margin-left: 15px">On Sale</a>
-                <a class="item" href="/items/category=housing" style="margin-left: 15px">Housing</a>
-                <a class="item" href="/items/category=events" style="margin-left: 15px">Events</a>
+            <div class="ui fixed vertical navbar menu" style="margin-top: 64px; width: 100%; display: none">
+                <a class="item" href="/items/category=sale"><span style="margin-left: 15px"><i class="shop icon"></i>On Sale</span></a>
+                <a class="item" href="/items/category=housing"><span style="margin-left: 15px"><i class="building outline icon"></i>Housing</span></a>
+                <a class="item" href="/items/category=events"><span style="margin-left: 15px"><i class="ticket icon"></i>Events</span></a>
+                <a class="item" href="/contact_us"><span style="margin-left: 15px"><i class="send icon"></i>About Us</span></a>
                 <div class="item menu">
                     <div class="item">
                         <form class="ui transparent icon input" action="/items/search">
@@ -86,25 +92,9 @@
         </script>
         
     </div>
+    
+    <div style="padding-top: 60px"></div>
        
-    <!--flash-->
-    <div class="ui container" style="margin-top: 70px">
-        <% if(error && error.length > 0) { %>
-            <div class="ui negative message">
-              <div class="header">
-                <%= error %>
-              </div>
-              <p>Refresh the page to make it go away.</p>
-            </div>
-        <% } %>
-        <% if(success && success.length > 0) { %>
-            <div class="ui positive message">
-                <div class="header">
-                    <%= success %>
-                </div>
-                <p>Refresh the page to make it go away.</p>
-            </div>
-        <% } %>
-    </div>
+
         
                 

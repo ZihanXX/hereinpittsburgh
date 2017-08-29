@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-//set up schema
+//NOT USED
 var locationsSchema = new mongoose.Schema({
     title: String,
     category: String,
@@ -25,6 +25,5 @@ var locationsSchema = new mongoose.Schema({
     orgUrl: String,
     date_crt: Date
 });
-
 
 module.exports = mongoose.model("Location", locationsSchema);

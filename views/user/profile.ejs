@@ -1,15 +1,37 @@
 <% include ../partials/header %>
 
+    <!--flash-->
+    <div class="ui container" style="margin-top: 70px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
 
 <div class="ui container">
     
-    <!--user items-->
-    <div style="margin-top: 50px">
-        <h3 class="ui horizontal divider header">
-          <i class="user icon" style="margin-bottom: 10px"></i>
-          <%= user.personal_name %>'s Items
-        </h3>
-        <% include ../items/items %>
+    <div style="padding-top: 10px; min-height: 60%">
+    
+        <!--user items-->
+        <div style="margin-top: 50px">
+            <h3 class="ui horizontal divider header">
+              <i class="user icon" style="margin-bottom: 10px"></i>
+              <%= user.personal_name %>'s Posts
+            </h3>
+            <% include ../items/items %>
+        </div>
+    
     </div>
     
 </div>

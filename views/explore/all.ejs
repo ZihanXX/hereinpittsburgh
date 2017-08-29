@@ -1,0 +1,40 @@
+<% include ../partials/header %>
+
+<div id="map" style="width: auto; height: 90%"></div>
+
+
+<script>
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 13,
+    center: {lat: 40.45, lng: -79.95},
+  });
+  var infowindow = new google.maps.InfoWindow();  
+  var geocoder = new google.maps.Geocoder;
+  var marker, i;
+  
+
+  //府河奥克兰
+  geocoder.geocode( { 'address': '328 Atwood St, Pittsburgh, PA 15213'}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      var marker = new google.maps.Marker({position: results[0].geometry.location, map: map}); 
+      google.maps.event.addListener(marker, 'click', function() { 
+        infowindow.setContent(
+          '<a href="https://www.google.com/maps/place/Sichuan+Gourmet/@40.4442493,-79.9607364,15z/data=!4m12!1m6!3m5!1s0x0:0x55ab31f26f8a7e22!2sSichuan+Gourmet!8m2!3d40.4388758!4d-79.9552479!3m4!1s0x0:0x55ab31f26f8a7e22!8m2!3d40.4388758!4d-79.9552479" target="_blank">'
+          +'<strong>府河人家-奥克兰</strong></a> - Sichuan Gourmet'
+          +'<br>Call: <a style="color: black" href="tel: (412) 621-6889"><u>(412) 621-6889</u></a>'
+          +'<br><a href="http://www.sichuan-gourmet.com" target="_blank"><u style="color: black">sichuan-gourmet.com</u>'
+          +'</a><br>'+results[0].formatted_address+'<br>'
+          +'介绍一下'
+        );
+        infowindow.open(map, marker);});} 
+    else alert("some problem in geocode" + status);
+  });
+  
+
+  
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBMASIofsTNkOuEteCjHEgVEdUza3lkK8&libraries=places&callback=initMap"
+    async defer></script>
+<% include ../partials/footer %>

@@ -1,10 +1,17 @@
-=======vv13========
-Jul.29  refine the padding-top of pages
-        add explore pittsburgh
+=======vv13_d========
+Aug.02  deploying
+
+Aug.03  refine everthing
+        two languages
+        footer放二维码 邮箱
+
+Aug.04  comment all the codes
+
+Aug.28  hide passwords
 
 
 TODO: 
-* two languages
+* google search
 * cur_item_count on show page*
 * message when uploading the images: "please be patient"*
 * "are you sure you want to ...?": 1)delete*

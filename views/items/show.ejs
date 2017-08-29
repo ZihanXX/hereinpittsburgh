@@ -1,5 +1,23 @@
 <% include ../partials/header %>
 
+    <!--flash-->
+    <div class="ui container" style="margin-top: 20px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/css/lightbox.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/js/lightbox.min.js"></script>
@@ -8,24 +26,24 @@
 
 <% if(item.isEnd == false) { %>
 <!--show the item below-->
-<div style="max-width: 600px; margin: 30px auto; padding-top: 50px">
+<div style="max-width: 600px; margin: 30px auto; padding-top: 20px; padding-left: 5px; padding-right: 5px">
   <!--category-->
   <div style="display:inline;">
     <% if(item.category == "Sale") { %>
-      <i class="shop large icon" style="margin-bottom: 10px"></i>
+      <i class="shop large icon" style="margin-bottom: 7px"></i>
     <% }else if(item.category == "Housing") {%>
-      <i class="building outline large icon" style="margin-bottom: 10px"></i>
+      <i class="building outline large icon" style="margin-bottom: 7px"></i>
     <% } else { %>
-      <i class="ticket large icon" style="margin-bottom: 10px"></i>
+      <i class="ticket large icon" style="margin-bottom: 7px"></i>
     <% } %>
   </div>
     
   <!--name-->
-  <h2 style="display:inline"><%= item.name %></h2>
+  <h2 style="display:inline; font-size: 20px"><%= item.name %></h2>
   
   <!--price-->
   <% if(item.category == "Sale" || item.category == "Housing") { %>
-    <div style="display:inline; margin-left: 25px" class="ui orange tag large label">$ <%= item.price %></div>
+    <div style="display:inline; margin-left: 25px" class="ui orange tag large label"><span>$ <%= item.price %></span></div>
   <% } %>
   
   <!--author-->
@@ -40,7 +58,7 @@
       </a>
       <% if(user.items.length > 1) { %>
         <a class="ui left pointing teal basic label" href="/profile/<%= user._id %>">
-          See all <%=user.items.length%> items this user owns
+          查看此用户的其他<%=user.items.length%>个posts
         </a>
       <% } %>
     <% } %>
@@ -55,17 +73,17 @@
       <% } ); %>
     <% } %>
     <% if(currentUser && flag) { %>
-      Remove From Favorite
+      <span style="color: grey">取消收藏</span>
       <a href="/items/<%= item._id %>/favorite-off"><i class="star big icon"></i></a>
     <% } else { %>
-      Add To Favorite
+      <span style="color: grey">添加收藏</span>
       <a href="/items/<%= item._id %>/favorite-on"><i class="empty star big icon"></i></a>
     <% } %>
   </div>
   
   <!--date_crt-->
   <div class="detail" style="font-size: 14px; color: grey; margin-top: 15px">
-    Created On: 
+    创建于： 
     <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
     <%= month[item.date_crt.getMonth()] %> - <%= item.date_crt.getDate() %> - <%= item.date_crt.getFullYear() %>
   </div>
@@ -76,10 +94,10 @@
       <i class="image icon"></i>
       Images
     </h4>
-    <p style="text-align: center; color: grey">Click to see full images</p>
+    <p style="text-align: center; color: grey">点击查看大图. CLICK FOR FULL IMAGES.</p>
     <div style="margin-left: 25px">
       <section>
-        <div class="ui link cards">
+        <div class="ui link centered cards">
         <% item.imgs.urls.forEach(function(url){ %>
           <% if(url != "") {%>
             <div class="ui card" style="width: 270px; height: 270px; position: relative;">
@@ -149,13 +167,19 @@
         <% if(item.category == "Sale") { %>
           <tr>
             <td>Delivery</td>
-            <td><%= item.delivery %></td>
+            <% if(item.delivery == "no") { %>
+              <td>No - 需要自取</td>
+            <% } else if(item.delivery == "yes") { %>
+              <td>Yes - 送货上门</td>
+            <% } else { %>
+              <td>Dependable - 视情况而定</td>
+            <% } %>
           </tr>
         <% } %>
         <!--orgUrl-->
         <% if(item.orgUrl != null && item.orgUrl != "") { %>
           <tr>
-            <td>Reference URL</td>
+            <td>References</td>
             <td><a href="<%= item.orgUrl %>" target="_blank"><%= item.orgUrl %></a></td>
           </tr>
         <% } %>
@@ -180,7 +204,7 @@
   <!--edit-->
   <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
     <div style="width: 200px; margin: 30px auto">
-      <a class="ui orange button" href="/items/<%= item._id %>/edit" style="width: 200px">Edit This Item</a>
+      <a class="ui orange button" href="/items/<%= item._id %>/edit" style="width: 200px">Edit - 编辑</a>
     </div>
   <% } %>
   
@@ -193,7 +217,7 @@
 
 <% if(item.isEnd == true) { %>
 <!--hide the information below-->
-<div style="max-width: 600px; margin: 30px auto;">
+<div style="max-width: 600px; margin: 30px auto; padding-top: 20px; padding-left: 5px; padding-right: 5px">
   
   <!--category-->
   <div style="display:inline;">
@@ -213,7 +237,7 @@
   <% } %>
   <!--is end-->
   <div class="ui large red left pointing label" style="margin-top: 10px">
-    This item has been sold
+    This post has ended - 已结束
   </div>
   <!--author-->
   <div style="margin-top: 10px">
@@ -264,7 +288,7 @@
     <p style="text-align: center; color: grey">Click to see full images</p>
     <div style="margin-left: 25px">
       <section>
-        <div class="ui link cards">
+        <div class="ui link centered cards">
         <% item.imgs.urls.forEach(function(url){ %>
           <% if(url != "") {%>
             <div class="ui card" style="width: 270px; height: 270px; position: relative;">
@@ -283,10 +307,10 @@
   <div style="margin-top: 30px">
     <% if(currentUser && item.author.id.equals(currentUser._id)){ %>
         <form id="delete-form" action="/items/<%= item._id %>?_method=DELETE" method="POST">
-            <div style="width: 200px; margin: 30px auto">
-              <button class="ui red button" style="width: 200px">Delete</button>
-              <p style="text-align: center">this operation is irreversible!!!</p>
+            <div style="width: 200px; margin: 30px auto; margin-bottom: 10px">
+              <button class="ui red button" style="width: 200px">Delete - 删除</button>
             </div>
+            <p style="text-align: center; color: grey">This operation is irreversible - 此操作不可逆</p>
         </form>
     <% } %>
   </div>

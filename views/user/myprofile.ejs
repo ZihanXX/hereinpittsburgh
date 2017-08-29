@@ -1,41 +1,63 @@
 <% include ../partials/header %>
 
+    <!--flash-->
+    <div class="ui container" style="margin-top: 70px">
+        <% if(error && error.length > 0) { %>
+            <div class="ui negative message">
+              <div class="header">
+                <%= error %>
+              </div>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0) { %>
+            <div class="ui positive message">
+                <div class="header">
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
 <div class="ui container">
+  
+  <div style="padding-top: 10px; min-height: 60%">
     
-  <!--add new item-->
-  <div style="width: 200px; margin: 30px auto">
-    <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
-      <i class="dropdown icon"></i>
-      <span class="text">Add New Item</span>
-      <div class="menu">
-        <a class="item" href="/items/new_sale">On Sale</a>
-        <a class="item" href="/items/new_housing">Housing</a>
-        <a class="item" href="/items/new_events">Events</a>
+    <!--add new item-->
+    <div style="width: 200px; margin: 30px auto">
+      <div class="ui floating labeled teal icon dropdown button" style="width: 200px">
+        <i class="dropdown icon"></i>
+        <span class="text">Add New Post</span>
+        <div class="menu">
+          <a class="item" href="/items/new_sale">On Sale - <span style="color: grey">二手家具/电器等</span></a>
+          <a class="item" href="/items/new_housing">Housing - <span style="color: grey">转租/求租房屋</span></a>
+          <a class="item" href="/items/new_events">Events - <span style="color: grey">发布活动/广告</span></a>
+        </div>
       </div>
     </div>
-  </div>
+      
+    <!--user items-->
+    <div style="margin-top: 30px">
+      <h3 class="ui horizontal divider header">
+        <i class="user icon" style="margin-bottom: 10px"></i>
+        Your Posts
+      </h3>
+      <% include ../items/items %>
+    </div>
     
-  <!--user items-->
-  <div style="margin-top: 50px">
-    <h3 class="ui horizontal divider header">
-      <i class="user icon" style="margin-bottom: 10px"></i>
-      Your Items
-    </h3>
-    <% include ../items/items %>
+    <!--favorite items-->
+    <div style="margin-top: 50px">
+      <h3 class="ui horizontal divider header">
+        <i class="star icon" style="margin-bottom: 10px"></i>
+        Your Favorites
+      </h3>
+      <% if(favorites.length > 0) { %>
+          <% var items = favorites; %>
+          <% include ../items/items %>
+      <% } %>
+    </div>
+      
   </div>
-  
-  <!--favorite items-->
-  <div style="margin-top: 50px">
-    <h3 class="ui horizontal divider header">
-      <i class="star icon" style="margin-bottom: 10px"></i>
-      Your Favorites
-    </h3>
-    <% if(favorites.length > 0) { %>
-        <% var items = favorites; %>
-        <% include ../items/items %>
-    <% } %>
-  </div>
-    
+
 </div>
 
 

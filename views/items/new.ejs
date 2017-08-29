@@ -13,15 +13,15 @@
     <% if(catename == "Sale") { %>
       <h2 style="text-align: center">
       <i class="shop grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
-      Create a New On Sale Item</h2>
+      Create a New On Sale Post - 创建新二手售卖信息</h2>
     <% } else if(catename == "Housing") { %>
       <h2 style="text-align: center">
       <i class="building outline grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
-      Create a New Housing Item</h2>
+      Create a New Housing Post - 创建新房屋转租信息</h2>
     <% } else { %>
       <h2 style="text-align: center">
       <i class="ticket grey icon" style="display: inline; margin-bottom: 10px; margin-right: 10px"></i>
-      Create a New Event</h2>
+      Create a New Event - 创建新活动/广告</h2>
     <% } %>
   </div>
   
@@ -37,7 +37,7 @@
       </h4>
       <div>
         <% if(!uploadDone) { %>
-          <p style="text-align: center; color: grey">You can upload up to 4 images. The maxmum size of each is up to 5Mb.</p>
+          <p style="text-align: center; color: grey">UP TO 4 IMAGES. UP TO 5MB FOR EACH IMAGE.</p>
           <% if(imgs === "not exist") {  %>
             <% include upload_img/new_imgs %>
           <% } else { %>
@@ -48,7 +48,7 @@
         <% }%>
       </div>
     </div>
-          
+       
     <!--form-->
     <div style="margin-top: 50px">
     <form class="ui form" action="/items" method="POST">
@@ -57,153 +57,158 @@
         <i class="bar chart icon"></i>
         Details
       </h4>
-      <!--name-->
-      <div class="field">
-        <label>Name</label>
-        <div class="ui corner labeled input">
-          <input type="text" name="name" placeholder="name" maxlength="18" required>
-          <div class="ui corner label">
-            <i class="asterisk icon"></i>
-          </div>
-        </div>
-      </div>
-      <!--price-->
-      <% if(catename == "Sale" || catename == "Housing") { %>
+      <!--upload first-->
+      <% if(!uploadDone) { %> 
+        <p style="text-align: center; color: grey">请先上传图片. PLEASE UPLOAD IMAGES FIRST.</p>
+      <% } %>
+      <!--if uploadDone-->
+      <% if(uploadDone) { %> 
+        <!--name-->
         <div class="field">
-          <label>Price</label>
-          <div class="ui right corner labeled input">
-            <label for="amount" class="ui label">$</label>
-            <input type="text" name="price" placeholder="price" id="amount" maxlength="10" required>
+          <label>Name</label>
+          <div class="ui corner labeled input">
+            <input type="text" name="name" placeholder="请输入20个字以内标题" maxlength="20" required>
             <div class="ui corner label">
               <i class="asterisk icon"></i>
             </div>
           </div>
         </div>
-      <% } %>
-      <!--category-->
-      <div class="field" style="visibility: hidden; height: 0; width: 0; margin: 0">
-      <!--<div class="field">-->
-        <label>Category (click to choose)</label>
-        <div class="ui corner labeled input">
-          <select name="category" class="ui simple fluid selection dropdown" id="cate-dropdown">
-            <% if(catename == "Sale") { %>
-              <option value="Sale" selected>On Sale</option>
-              <option value="Housing">Housing</option>
-              <option value="Events">Events</option>
-            <% } else if(catename == "Housing") {%>
-              <option value="Sale">On Sale</option>
-              <option value="Housing" selected>Housing</option>
-              <option value="Events">Events</option>
-            <% } else { %>
-              <option value="Sale">On Sale</option>
-              <option value="Housing">Housing</option>
-              <option value="Events" selected>Events</option>
-            <% } %>
-          </select>
-          <div class="ui corner label">
-            <i class="asterisk icon"></i>
-          </div>
-        </div>
-      </div>
-      <!--delivery-->
-      <% if(catename == "Sale") { %>
-        <div class="field">
-          <label>Delivery (click to choose)</label>
-          <select name="delivery" class="ui simple fluid selection dropdown" id="deli-dropdown">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-            <option value="dependable">Dependable</option>
-          </select>
-        </div>
-      <% } %>
-      <!--descreption-->
-      <div class="field">
-        <label>Description</label>
-        <div class="field">
-          <% if(catename == "Sale") { %>
-            <textarea name="descreption" rows="3" placeholder="If you want to post mutiple items in one post, please list the prices here"></textarea>
-          <% } else { %>
-            <textarea name="descreption" rows="3" placeholder="Details Info"></textarea>
-          <% } %>
-        </div>
-      </div>
-      <!--wechat-->
-      <div class="field">
-        <label>Contact Wechat</label>
-        <div class="ui corner labeled input">
-          <% if(catename == "Events") { %>
-            <input type="text" name="wechat" value="<%= currentUser.wechat %>">
-          <% } else { %>
-            <input type="text" name="wechat" value="<%= currentUser.wechat %>" required>
-            <div class="ui corner label">
-              <i class="asterisk icon"></i>
-            </div>
-          <% } %>
-        </div>
-      </div>
-      <!--date_av-->
-      <div class="field">
-        <label>Available Dates</label>
-        <div class="two fields">
+        <!--price-->
+        <% if(catename == "Sale" || catename == "Housing") { %>
           <div class="field">
-            <div class="ui calendar" id="rangestart">
-              <div class="ui input left icon">
-                <i class="calendar icon"></i>
-                <input name="date_av[0]" type="text" placeholder="Start">
+            <label>Price</label>
+            <div class="ui right corner labeled input">
+              <label for="amount" class="ui label">$</label>
+              <input type="text" name="price" placeholder="价格" id="amount" maxlength="10" required>
+              <div class="ui corner label">
+                <i class="asterisk icon"></i>
               </div>
             </div>
           </div>
-          <div class="field">
-            <div class="ui calendar" id="rangeend">
-              <div class="ui input left icon">
-                <i class="calendar icon"></i>
-                <input name="date_av[1]" type="text" placeholder="End">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--orgUrl-->
-      <div class="field">
-        <label>Reference URL</label>
-        <% if(catename == "Sale") { %>
-          <input type="text" name="orgUrl" placeholder="The original url would give more details for perspective buyers.">
-        <% } else if(catename == "Housing") { %>
-          <input type="text" name="orgUrl" placeholder="Do you have detail information from the management?">
-        <% } else { %>
-          <input type="text" name="orgUrl" placeholder="The official site for this event.">
         <% } %>
-      </div>
-      <!--map-->
-      <div class="field">
-        <label>Address</label>
-        <div class="field" style="visibility: hidden; height: 0; padding: 0; margin: 0">
-          <input id="place-id" type="text" name="place_id" placeholder="place_id">
+        <!--category-->
+        <div class="field" style="visibility: hidden; height: 0; width: 0; margin: 0">
+        <!--<div class="field">-->
+          <label>Category (click to choose)</label>
+          <div class="ui corner labeled input">
+            <select name="category" class="ui simple fluid selection dropdown" id="cate-dropdown">
+              <% if(catename == "Sale") { %>
+                <option value="Sale" selected>On Sale</option>
+                <option value="Housing">Housing</option>
+                <option value="Events">Events</option>
+              <% } else if(catename == "Housing") {%>
+                <option value="Sale">On Sale</option>
+                <option value="Housing" selected>Housing</option>
+                <option value="Events">Events</option>
+              <% } else { %>
+                <option value="Sale">On Sale</option>
+                <option value="Housing">Housing</option>
+                <option value="Events" selected>Events</option>
+              <% } %>
+            </select>
+            <div class="ui corner label">
+              <i class="asterisk icon"></i>
+            </div>
+          </div>
         </div>
-        <div class="ui input field">
-          <% if(catename == "Sale") { %>
-            <input id="pac-input" type="text" name="address" placeholder="To protect your privicy, the exact address won't be shown.">
-          <% } else { %>
-            <input id="pac-input" type="text" name="address" placeholder="Enter a location">
-          <% } %>
-        </div>
+        <!--delivery-->
+        <% if(catename == "Sale") { %>
+          <div class="field">
+            <label>Delivery (click to choose)</label>
+            <select name="delivery" class="ui simple fluid selection dropdown" id="deli-dropdown">
+              <option value="no">No - 需要自取</option>
+              <option value="yes">Yes - 送货上门</option>
+              <option value="dependable">Dependable - 视情况而定</option>
+            </select>
+          </div>
+        <% } %>
+        <!--descreption-->
         <div class="field">
-          <div id="map"></div>
+          <label>Description</label>
+          <div class="field">
+            <% if(catename == "Sale") { %>
+              <textarea name="descreption" rows="3" placeholder="详细描述 (如果您想在这个post里发布多个物品信息, 请在此处分别标明价格)"></textarea>
+            <% } else { %>
+              <textarea name="descreption" rows="3" placeholder="详细描述"></textarea>
+            <% } %>
+          </div>
+        </div>
+        <!--wechat-->
+        <div class="field">
+          <label>Contact WeChat</label>
+          <div class="ui corner labeled input">
+            <% if(catename == "Events") { %>
+              <input type="text" name="wechat" value="<%= currentUser.wechat %>">
+            <% } else { %>
+              <input type="text" name="wechat" value="<%= currentUser.wechat %>" required>
+              <div class="ui corner label">
+                <i class="asterisk icon"></i>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <!--date_av-->
+        <div class="field">
+          <label>Available Dates</label>
+          <div class="two fields">
+            <div class="field">
+              <div class="ui calendar" id="rangestart">
+                <div class="ui input left icon">
+                  <i class="calendar icon"></i>
+                  <input name="date_av[0]" type="text" placeholder="开始日期">
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui calendar" id="rangeend">
+                <div class="ui input left icon">
+                  <i class="calendar icon"></i>
+                  <input name="date_av[1]" type="text" placeholder="结束日期">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--orgUrl-->
+        <div class="field">
+          <label>Reference URL</label>
           <% if(catename == "Sale") { %>
-            <% include maps/map_circle %>
+            <input type="text" name="orgUrl" placeholder="原商品链接可以帮助买家更好的了解商品信息">
+          <% } else if(catename == "Housing") { %>
+            <input type="text" name="orgUrl" placeholder="Management的官方网站可以帮助租房者更好的了解情况">
           <% } else { %>
-            <% include maps/map_marker %>
+            <input type="text" name="orgUrl" placeholder="活动官方链接或参考链接可以帮助读者了解更多信息">
           <% } %>
         </div>
-      </div>
-      <!--submit-->
-      <% if(uploadDone) { %>
-        <div style="width: 200px; margin: 30px auto">
-          <button class="ui teal button" style="width: 200px">Submit</button>
+        <!--map-->
+        <div class="field">
+          <label>Address</label>
+          <div class="field" style="visibility: hidden; height: 0; padding: 0; margin: 0">
+            <input id="place-id" type="text" name="place_id" placeholder="place_id">
+          </div>
+          <div class="ui input field">
+            <% if(catename == "Sale") { %>
+              <input id="pac-input" type="text" name="address" placeholder="请输入地址(为了保护您的隐私, 具体地址将不会被显示)">
+            <% } else { %>
+              <input id="pac-input" type="text" name="address" placeholder="请输入地址">
+            <% } %>
+          </div>
+          <div class="field">
+            <div id="map"></div>
+            <% if(catename == "Sale") { %>
+              <% include maps/map_circle %>
+            <% } else { %>
+              <% include maps/map_marker %>
+            <% } %>
+          </div>
         </div>
-      <% }%>
-    </form>
-
+        <!--submit-->
+        <div style="width: 200px; margin: 30px auto">
+          <button class="ui teal button" style="width: 200px">Submit - 发布</button>
+        </div>
+        <p style="text-align: center">当此物品交易成功或您想结束此post时, 请进入post页面点击最下方"Edit".</p>
+      </form>
+    <% }%><!--if uploadDone-->
   </div>
   <!--item info above-->
   

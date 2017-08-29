@@ -1,6 +1,6 @@
-<div class="ui container">
+<div class="ui container center aligned">
   
-  <div class="ui link cards">
+  <div class="ui link centered cards">
     <% items.forEach(function(item){ %>
       <div class="card" style="margin: 17px 17px; width: 250px">
         <div class="thumbnail">
@@ -14,17 +14,21 @@
           </a>
         </div>
         <div class="content">
-          <a class="header" href="/items/<%= item._id %>"><%= item.name %></a>
-          <div class="meta" style="margin-top: 5px">
-            <%= item.category %>
-          </div>
+          <% if(item.category == "Sale") { %>
+            <i class="shop grey icon" style="display: inline; margin-right: 5px; margin-bottom: 5px"></i>
+          <% } else if(item.category == "Housing") { %>
+            <i class="building outline grey icon" style="display: inline; margin-right: 5px; margin-bottom: 5px"></i>
+          <% } else { %>
+            <i class="ticket grey icon" style="display: inline; margin-right: 5px; margin-bottom: 5px"></i>
+          <% } %>
+          <a class="header" style="display: inline" href="/items/<%= item._id %>"><%= item.name %></a>
         </div>
         <div class="extra content">
           <span class="right floated">
             <% var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
             <%= month[item.date_crt.getMonth()] %> - <%= item.date_crt.getDate() %> - <%= item.date_crt.getFullYear() %>
           </span>
-          <span>
+          <span class="left floated">
             <i class="user icon"></i>
             <%= item.author.username %>
           </span>
